@@ -1,0 +1,27 @@
+{
+  "name": "library-backend",
+  "version": "1.0.0",
+  "description": "小区图书管理系统后端",
+  "main": "index.js",
+  "scripts": {
+    "dev": "egg-bin dev",
+    "start": "egg-scripts start",
+    "stop": "egg-scripts stop",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
+  },
+  "dependencies": {
+    "egg": "^3.17.0",
+    "egg-cors": "^2.2.3",
+    "egg-mongoose": "^3.3.1",
+    "egg-router-plus": "^1.3.1",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "egg-bin": "^6.2.0",
+    "jest": "^30.3.0",
+    "supertest": "^7.2.2"
+  }
+}
