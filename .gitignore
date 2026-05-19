@@ -1,3 +1,36 @@
 node_modules/
 dist/
 .env
+.env.local
+.env.production
+
+# Build output
+frontend/build/
+backend/build/
+
+# Logs
+logs/
+*.log
+
+# Runtime
+run/
+*.pid
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Generated files
+*.pptx
+*.html
+*.pyc
+__pycache__/
+
+# Mock server
+mock-server.js

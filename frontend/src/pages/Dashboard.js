@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Row, Col, Statistic, Table, List, Tag } from 'antd';
 import { BookOutlined, UserOutlined, ReadOutlined, RiseOutlined } from '@ant-design/icons';
-import { borrowApi } from '../../api';
+import { borrowApi } from '../api';
 
 const Dashboard = () => {
   const [statistics, setStatistics] = useState(null);
@@ -13,7 +13,7 @@ const Dashboard = () => {
   const loadStatistics = async () => {
     try {
       const res = await borrowApi.statistics();
-      setStatistics(res.data);
+      setStatistics(res);
     } catch (error) {
       console.error('获取统计数据失败', error);
     }

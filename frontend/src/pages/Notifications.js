@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { List, Tag, Button, Space, Empty, Badge } from 'antd';
 import { BellOutlined, CheckOutlined, DeleteOutlined } from '@ant-design/icons';
-import { notificationApi } from '../../api';
+import { notificationApi } from '../api';
 import { useSelector, useDispatch } from 'react-redux';
-import { setNotifications, setUnreadCount } from '../../store';
+import { setNotifications, setUnreadCount } from '../store';
 
 const Notifications = () => {
   const dispatch = useDispatch();

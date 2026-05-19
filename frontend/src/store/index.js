@@ -24,6 +24,12 @@ const userSlice = createSlice({
         state.info.points = action.payload;
       }
     },
+    logout: (state) => {
+      state.token = null;
+      state.info = null;
+      localStorage.removeItem('token');
+      localStorage.removeItem('userInfo');
+    },
   },
 });
 
@@ -105,7 +111,7 @@ const notificationSlice = createSlice({
   },
 });
 
-export const { setUser, updatePoints } = userSlice.actions;
+export const { setUser, updatePoints, logout } = userSlice.actions;
 export const { setBooks, setCurrentBook, setCategories, addBook, updateBook, deleteBook } = bookSlice.actions;
 export const { setBorrowList, setReservations, setStatistics } = borrowSlice.actions;
 export const { setNotifications, setUnreadCount } = notificationSlice.actions;

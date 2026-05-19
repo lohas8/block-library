@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Row, Col, Button, message, Modal, Form, Input, NumberInput, Tag, Space, Popconfirm } from 'antd';
 import { GiftOutlined, PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
-import { pointsApi } from '../../api';
+import { pointsApi } from '../api';
 import { useSelector, useDispatch } from 'react-redux';
-import { updatePoints } from '../../store';
+import { updatePoints } from '../store';
 
 const PointsMall = () => {
   const dispatch = useDispatch();

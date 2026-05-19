@@ -1,113 +1,77 @@
-import React from 'react';
-import { Layout, Menu, Badge, Avatar, Dropdown, Space } from 'antd';
-import { 
-  DashboardOutlined, 
-  BookOutlined, 
-  ImportOutlined, 
-  UserOutlined, 
-  GiftOutlined,
-  BellOutlined,
-  LogoutOutlined,
-} from '@ant-design/icons';
-import { useNavigate, useLocation } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { useNavigate, useLocation, Outlet } from 'react-router-dom';
+import { Layout, Menu, Avatar, Dropdown, Badge } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
-import { setUser } from '../store';
+import { setUser, logout } from '../store';
+import './AppLayout.css';
 
 const { Header, Sider, Content } = Layout;
 
-const AppLayout = ({ children }) => {
+const AppLayout = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
   const { info } = useSelector(state => state.user);
-  const { unreadCount } = useSelector(state => state.notification);
 
   const menuItems = [
-    {
-      key: '/',
-      icon: <DashboardOutlined />,
-      label: '仪表盘',
-    },
-    {
-      key: '/books',
-      icon: <BookOutlined />,
-      label: '图书管理',
-    },
-    {
-      key: '/borrow',
-      icon: <ImportOutlined />,
-      label: '借阅管理',
-    },
-    ...(info?.role === 'admin' ? [{
-      key: '/users',
-      icon: <UserOutlined />,
-      label: '用户管理',
-    }] : []),
-    {
-      key: '/points',
-      icon: <GiftOutlined />,
-      label: '积分商城',
-    },
-    {
-      key: '/notifications',
-      icon: <Badge count={unreadCount} size="small"><BellOutlined /></Badge>,
-      label: '通知',
-    },
-  ];
-
-  const userMenuItems = [
-    {
-      key: 'profile',
-      label: `积分: ${info?.points || 0}`,
-      disabled: true,
-    },
-    {
-      type: 'divider',
-    },
-    {
-      key: 'logout',
-      icon: <LogoutOutlined />,
-      label: '退出登录',
-      danger: true,
-    },
+    { key: '/', icon: '📊', label: '仪表盘' },
+    { key: '/books', icon: '📚', label: '图书管理' },
+    { key: '/borrow', icon: '📖', label: '借阅管理' },
+    { key: '/users', icon: '👥', label: '用户管理' },
+    { key: '/points', icon: '🎁', label: '积分商城' },
+    { key: '/notifications', icon: '🔔', label: '通知' },
   ];
 
   const handleMenuClick = ({ key }) => {
     navigate(key);
   };
 
+  const selectedKey = menuItems.find(item => location.pathname === item.key)?.key || '/';
+
+  const userMenu = {
+    items: [
+      { key: 'logout', label: '退出登录' }
+    ]
+  };
+
   const handleUserMenuClick = ({ key }) => {
     if (key === 'logout') {
-      dispatch(setUser({ token: null, user: null }));
+      dispatch(logout());
       navigate('/login');
     }
   };
 
   return (
-    <Layout style={{ minHeight: '100vh' }}>
-      <Sider theme="dark" breakpoint="lg" collapsedWidth="0">
-        <div style={{ height: 64, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 18 }}>
-          📚 图书管理
-        </div>
+    <Layout className="app-layout">
+      <Sider width={200} className="app-sider">
+        <div className="logo">📚 小区图书管理</div>
         <Menu
-          theme="dark"
           mode="inline"
-          selectedKeys={[location.pathname]}
-          items={menuItems}
+          theme="dark"
+          selectedKeys={[selectedKey]}
           onClick={handleMenuClick}
+          items={menuItems}
         />
       </Sider>
       <Layout>
-        <Header style={{ background: '#fff', padding: '0 24px', display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
-          <Dropdown menu={{ items: userMenuItems, onClick: handleUserMenuClick }} placement="bottomRight">
-            <Space style={{ cursor: 'pointer' }}>
-              <Avatar icon={<UserOutlined />} />
-              <span>{info?.name || info?.username}</span>
-            </Space>
-          </Dropdown>
+        <Header className="app-header">
+          <div className="header-left">
+            <span className="page-title">{menuItems.find(i => i.key === selectedKey)?.label || '仪表盘'}</span>
+          </div>
+          <div className="header-right">
+            <Dropdown menu={userMenu} onClick={handleUserMenuClick} placement="bottomRight">
+              <div className="user-info">
+                <Avatar style={{ backgroundColor: '#1890ff' }}>{info?.name?.[0] || '管'}</Avatar>
+                <span className="username">{info?.name || '管理员'}</span>
+                {info?.points !== undefined && (
+                  <span className="points">{info.points} 积分</span>
+                )}
+              </div>
+            </Dropdown>
+          </div>
         </Header>
-        <Content style={{ margin: 24, padding: 24, background: '#fff', minHeight: 280 }}>
-          {children}
+        <Content className="app-content">
+          <Outlet />
         </Content>
       </Layout>
     </Layout>

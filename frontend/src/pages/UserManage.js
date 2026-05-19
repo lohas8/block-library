@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Button, Space, Modal, Form, Input, message, Tag, Select } from 'antd';
 import { PlusOutlined, UserOutlined } from '@ant-design/icons';
-import { userApi } from '../../api';
+import { userApi } from '../api';
 import { useSelector } from 'react-redux';
 
 const { Option } = Select;

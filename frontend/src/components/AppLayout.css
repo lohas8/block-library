@@ -1,0 +1,72 @@
+.app-layout {
+  min-height: 100vh;
+}
+
+.app-sider {
+  background: #001529 !important;
+}
+
+.app-sider .logo {
+  height: 64px;
+  line-height: 64px;
+  text-align: center;
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  background: #002140;
+  border-bottom: 1px solid #003a70;
+}
+
+.app-header {
+  background: #fff !important;
+  padding: 0 24px !important;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 1px 4px rgba(0,21,41,.08);
+  height: 64px !important;
+  line-height: 64px !important;
+}
+
+.header-left .page-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #262626;
+}
+
+.header-right .user-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 0 8px;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.header-right .user-info:hover {
+  background: #f5f5f5;
+}
+
+.header-right .username {
+  font-size: 14px;
+  color: #262626;
+}
+
+.header-right .points {
+  font-size: 12px;
+  color: #1890ff;
+  background: #e6f7ff;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+.app-content {
+  margin: 16px;
+  padding: 20px;
+  background: #fff;
+  border-radius: 8px;
+  min-height: calc(100vh - 64px - 32px - 48px);
+  overflow-y: auto;
+}

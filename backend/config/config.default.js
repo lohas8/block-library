@@ -1,5 +1,6 @@
 /* eslint-disable */
 module.exports = {
+  keys: 'library-backend-secret-key-2026',
   mongoose: {
     client: {
       url: 'mongodb://localhost:27017/library',

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Form, Input, Button, Card, message, Tabs, Radio } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
-import { userApi } from '../../api';
+import { userApi } from '../api';
 import { useDispatch } from 'react-redux';
-import { setUser } from '../../store';
+import { setUser } from '../store';
 import { useNavigate } from 'react-router-dom';
 
 const Login = () => {

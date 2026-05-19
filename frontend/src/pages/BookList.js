@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Button, Space, Input, Select, Modal, Form, message, Popconfirm } from 'antd';
 import { PlusOutlined, SearchOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
-import { bookApi } from '../../api';
+import { bookApi } from '../api';
 import { useDispatch, useSelector } from 'react-redux';
-import { setBooks, setCategories, addBook, updateBook, deleteBook } from '../../store';
+import { setBooks, setCategories, addBook, updateBook, deleteBook } from '../store';
 
 const { Option } = Select;
 
@@ -25,7 +25,7 @@ const BookList = () => {
     setLoading(true);
     try {
       const res = await bookApi.list(params);
-      dispatch(setBooks(res.data));
+      dispatch(setBooks(res));
     } catch (error) {
       message.error('获取图书列表失败');
     }
@@ -35,7 +35,7 @@ const BookList = () => {
   const loadCategories = async () => {
     try {
       const res = await bookApi.categories();
-      dispatch(setCategories(res.data));
+      dispatch(setCategories(res));
     } catch (error) {
       console.error('获取分类失败', error);
     }

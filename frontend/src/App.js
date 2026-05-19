@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Provider, useSelector } from 'react-redux';
 import { store } from './store';
 import AppLayout from './components/AppLayout';
@@ -34,22 +34,20 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/" element={
             <PrivateRoute>
-              <AppLayout>
-                <Routes>
-                  <Route index element={<Dashboard />} />
-                  <Route path="books" element={<BookList />} />
-                  <Route path="borrow" element={<BorrowManage />} />
-                  <Route path="users" element={
-                    <AdminRoute>
-                      <UserManage />
-                    </AdminRoute>
-                  } />
-                  <Route path="points" element={<PointsMall />} />
-                  <Route path="notifications" element={<Notifications />} />
-                </Routes>
-              </AppLayout>
+              <AppLayout />
             </PrivateRoute>
-          } />
+          }>
+            <Route index element={<Dashboard />} />
+            <Route path="books" element={<BookList />} />
+            <Route path="borrow" element={<BorrowManage />} />
+            <Route path="users" element={
+              <AdminRoute>
+                <UserManage />
+              </AdminRoute>
+            } />
+            <Route path="points" element={<PointsMall />} />
+            <Route path="notifications" element={<Notifications />} />
+          </Route>
         </Routes>
       </BrowserRouter>
     </Provider>
