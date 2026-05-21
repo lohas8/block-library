@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useNavigate, useLocation, Outlet } from 'react-router-dom';
 import { Layout, Menu, Avatar, Dropdown, Badge } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
-import { setUser, logout } from '../store';
+import { setUser, logout, setTheme, toggleFeature } from '../store';
 import './AppLayout.css';
 
 const { Header, Sider, Content } = Layout;
@@ -12,15 +12,21 @@ const AppLayout = () => {
   const location = useLocation();
   const dispatch = useDispatch();
   const { info } = useSelector(state => state.user);
+  const { theme, features } = useSelector(state => state.settings);
 
   const menuItems = [
     { key: '/', icon: '📊', label: '仪表盘' },
-    { key: '/books', icon: '📚', label: '图书管理' },
-    { key: '/borrow', icon: '📖', label: '借阅管理' },
-    { key: '/users', icon: '👥', label: '用户管理' },
-    { key: '/points', icon: '🎁', label: '积分商城' },
+    ...(features.bookManage ? [{ key: '/books', icon: '📚', label: '图书管理' }] : []),
+    ...(features.borrow ? [{ key: '/borrow', icon: '📖', label: '借阅管理' }] : []),
+    ...(features.userManage ? [{ key: '/users', icon: '👥', label: '用户管理' }] : []),
+    ...(features.pointsMall ? [{ key: '/points', icon: '🎁', label: '积分商城' }] : []),
     { key: '/notifications', icon: '🔔', label: '通知' },
+    { key: '/settings', icon: '⚙️', label: '配置' },
   ];
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+  }, [theme]);
 
   const handleMenuClick = ({ key }) => {
     navigate(key);
@@ -30,6 +36,8 @@ const AppLayout = () => {
 
   const userMenu = {
     items: [
+      { key: 'settings', label: '⚙️ 系统配置' },
+      { type: 'divider' },
       { key: 'logout', label: '退出登录' }
     ]
   };
@@ -38,23 +46,25 @@ const AppLayout = () => {
     if (key === 'logout') {
       dispatch(logout());
       navigate('/login');
+    } else if (key === 'settings') {
+      navigate('/settings');
     }
   };
 
   return (
-    <Layout className="app-layout">
-      <Sider width={200} className="app-sider">
-        <div className="logo">📚 小区图书管理</div>
+    <Layout className={`app-layout theme-${theme}`}>
+      <Sider width={200} className={`app-sider ${theme === 'dark' ? 'dark-sider' : ''}`}>
+        <div className="logo">📚 小区图书</div>
         <Menu
           mode="inline"
-          theme="dark"
+          theme={theme === 'dark' ? 'light' : 'dark'}
           selectedKeys={[selectedKey]}
           onClick={handleMenuClick}
           items={menuItems}
         />
       </Sider>
       <Layout>
-        <Header className="app-header">
+        <Header className={`app-header ${theme === 'dark' ? 'dark-header' : ''}`}>
           <div className="header-left">
             <span className="page-title">{menuItems.find(i => i.key === selectedKey)?.label || '仪表盘'}</span>
           </div>
@@ -70,7 +80,7 @@ const AppLayout = () => {
             </Dropdown>
           </div>
         </Header>
-        <Content className="app-content">
+        <Content className={`app-content ${theme === 'dark' ? 'dark-content' : ''}`}>
           <Outlet />
         </Content>
       </Layout>

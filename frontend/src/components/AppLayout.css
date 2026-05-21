@@ -70,3 +70,65 @@
   min-height: calc(100vh - 64px - 32px - 48px);
   overflow-y: auto;
 }
+
+/* 暗色主题 */
+[data-theme="dark"] .app-header {
+  background: #1f1f1f !important;
+  border-bottom: 1px solid #303030;
+  box-shadow: none;
+}
+
+[data-theme="dark"] .header-left .page-title {
+  color: #e8e8e8;
+}
+
+[data-theme="dark"] .header-right .user-info:hover {
+  background: #2b2b2b;
+}
+
+[data-theme="dark"] .header-right .username {
+  color: #e8e8e8;
+}
+
+[data-theme="dark"] .header-right .points {
+  background: #1a3a5c;
+  color: #40a9ff;
+}
+
+[data-theme="dark"] .app-content {
+  background: #141414;
+}
+
+[data-theme="dark"] .app-sider {
+  background: #001529 !important;
+}
+
+[data-theme="dark"] .app-sider.dark-sider {
+  background: #001529 !important;
+}
+
+[data-theme="dark"] .app-sider .logo {
+  background: #002140;
+  border-bottom-color: #003a70;
+}
+
+[data-theme="dark"] .ant-menu {
+  background: transparent !important;
+}
+
+[data-theme="dark"] .ant-menu-item {
+  color: #e8e8e8 !important;
+}
+
+[data-theme="dark"] .ant-menu-item:hover {
+  background: #262626 !important;
+}
+
+[data-theme="dark"] .ant-menu-item-selected {
+  background: #1890ff !important;
+  color: #fff !important;
+}
+
+[data-theme="dark"] .app-layout {
+  background: #141414;
+}

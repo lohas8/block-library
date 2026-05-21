@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Row, Col, Button, message, Modal, Form, Input, NumberInput, Tag, Space, Popconfirm } from 'antd';
-import { GiftOutlined, PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { GiftOutlined, PlusOutlined, EditOutlined, DeleteOutlined, ShoppingCartOutlined } from '@ant-design/icons';
 import { pointsApi } from '../api';
 import { useSelector, useDispatch } from 'react-redux';
 import { updatePoints } from '../store';
@@ -118,9 +118,10 @@ const PointsMall = () => {
                   <DeleteOutlined key="delete" />
                 </Popconfirm>,
               ] : [
-                <Button 
-                  type="primary" 
-                  key="exchange" 
+                <Button
+                  type="primary"
+                  key="exchange"
+                  icon={<ShoppingCartOutlined />}
                   disabled={!info || info.points < item.points || item.stock === 0}
                   onClick={() => handleExchange(item._id)}
                 >

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { List, Tag, Button, Space, Empty, Badge } from 'antd';
-import { BellOutlined, CheckOutlined, DeleteOutlined } from '@ant-design/icons';
+import { BellOutlined, CheckOutlined, DeleteOutlined, ClearOutlined } from '@ant-design/icons';
 import { notificationApi } from '../api';
 import { useSelector, useDispatch } from 'react-redux';
 import { setNotifications, setUnreadCount } from '../store';
@@ -79,7 +79,7 @@ const Notifications = () => {
       {unreadCount > 0 && (
         <Space style={{ marginBottom: 16 }}>
           <Badge count={unreadCount} />
-          <Button icon={<CheckOutlined />} onClick={handleMarkAllRead}>
+          <Button icon={<ClearOutlined />} onClick={handleMarkAllRead}>
             全部标记已读
           </Button>
         </Space>
@@ -93,7 +93,7 @@ const Notifications = () => {
             style={{ background: item.read ? '#fff' : '#f6ffed', padding: 16 }}
             actions={[
               !item.read && (
-                <Button type="link" size="small" onClick={() => handleMarkRead(item._id)}>
+                <Button type="link" size="small" icon={<CheckOutlined />} onClick={() => handleMarkRead(item._id)}>
                   已读
                 </Button>
               ),

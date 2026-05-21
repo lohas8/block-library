@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Provider, useSelector } from 'react-redux';
 import { store } from './store';
 import AppLayout from './components/AppLayout';
@@ -9,6 +9,7 @@ import BorrowManage from './pages/BorrowManage';
 import UserManage from './pages/UserManage';
 import PointsMall from './pages/PointsMall';
 import Notifications from './pages/Notifications';
+import Settings from './pages/Settings';
 import Login from './pages/Login';
 
 // 路由守卫
@@ -47,6 +48,7 @@ function App() {
             } />
             <Route path="points" element={<PointsMall />} />
             <Route path="notifications" element={<Notifications />} />
+            <Route path="settings" element={<Settings />} />
           </Route>
         </Routes>
       </BrowserRouter>

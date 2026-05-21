@@ -111,10 +111,40 @@ const notificationSlice = createSlice({
   },
 });
 
+// 配置 slice
+const settingsSlice = createSlice({
+  name: 'settings',
+  initialState: {
+    theme: localStorage.getItem('theme') || 'light',
+    features: JSON.parse(localStorage.getItem('features') || '{"borrow":true,"bookManage":true,"userManage":true,"pointsMall":true}'),
+    permissions: JSON.parse(localStorage.getItem('permissions') || '{"adminRoles":["super_admin","admin"],"managerRoles":["admin","owner","property"],"userRoles":["owner","property","user"]}'),
+  },
+  reducers: {
+    setTheme: (state, action) => {
+      state.theme = action.payload;
+      localStorage.setItem('theme', action.payload);
+      document.documentElement.setAttribute('data-theme', action.payload);
+    },
+    toggleFeature: (state, action) => {
+      const { key, value } = action.payload;
+      state.features[key] = value;
+      localStorage.setItem('features', JSON.stringify(state.features));
+    },
+    setPermissions: (state, action) => {
+      state.permissions = action.payload;
+      localStorage.setItem('permissions', JSON.stringify(state.permissions));
+    },
+  },
+});
+
 export const { setUser, updatePoints, logout } = userSlice.actions;
 export const { setBooks, setCurrentBook, setCategories, addBook, updateBook, deleteBook } = bookSlice.actions;
 export const { setBorrowList, setReservations, setStatistics } = borrowSlice.actions;
 export const { setNotifications, setUnreadCount } = notificationSlice.actions;
+export const { setTheme, toggleFeature, setPermissions } = settingsSlice.actions;
+
+// 重新导出配置
+export { ROLE_CONFIG, FEATURE_CONFIG, checkPermission, applyTheme } from './settings';
 
 export const store = configureStore({
   reducer: {
@@ -122,5 +152,6 @@ export const store = configureStore({
     books: bookSlice.reducer,
     borrow: borrowSlice.reducer,
     notification: notificationSlice.reducer,
+    settings: settingsSlice.reducer,
   },
 });

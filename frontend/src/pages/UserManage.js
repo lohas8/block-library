@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Button, Space, Modal, Form, Input, message, Tag, Select } from 'antd';
-import { PlusOutlined, UserOutlined } from '@ant-design/icons';
+import { PlusOutlined, UserOutlined, EditOutlined, PlusCircleOutlined, MinusCircleOutlined } from '@ant-design/icons';
 import { userApi } from '../api';
 import { useSelector } from 'react-redux';
 
@@ -117,13 +117,13 @@ const UserManage = () => {
       key: 'action',
       render: (_, record) => (
         <Space>
-          <Button type="link" onClick={() => handleEdit(record)}>
+          <Button type="link" icon={<EditOutlined />} onClick={() => handleEdit(record)}>
             编辑
           </Button>
-          <Button type="link" onClick={() => handleUpdatePoints(record._id, 'add')}>
+          <Button type="link" icon={<PlusCircleOutlined />} onClick={() => handleUpdatePoints(record._id, 'add')}>
             加积分
           </Button>
-          <Button type="link" onClick={() => handleUpdatePoints(record._id, 'subtract')}>
+          <Button type="link" icon={<MinusCircleOutlined />} onClick={() => handleUpdatePoints(record._id, 'subtract')}>
             减积分
           </Button>
         </Space>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Button, Space, Tag, Select, Modal, message, Card, Row, Col, Form } from 'antd';
-import { BookOutlined, UserOutlined } from '@ant-design/icons';
+import { BookOutlined, UserOutlined, UndoOutlined } from '@ant-design/icons';
 import { borrowApi, bookApi, userApi } from '../api';
 import { useSelector } from 'react-redux';
 import { setBorrowList } from '../store';
@@ -122,7 +122,7 @@ const BorrowManage = () => {
       key: 'action',
       render: (_, record) => (
         record.status === 'borrowed' && (
-          <Button type="link" onClick={() => handleReturn(record._id)}>
+          <Button type="link" icon={<UndoOutlined />} onClick={() => handleReturn(record._id)}>
             归还
           </Button>
         )
