@@ -52,3 +52,18 @@
   display: flex;
   gap: 12px;
 }
+
+.invite-link-box {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.invite-section h4 {
+  margin-bottom: 8px;
+}
+
+.inviter-info {
+  display: flex;
+  align-items: center;
+}

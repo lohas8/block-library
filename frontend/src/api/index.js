@@ -51,6 +51,8 @@ export const userApi = {
   list: (params) => api.get('/api/users', { params }),
   updatePoints: (id, data) => api.post(`/api/users/${id}/points`, data),
   borrowHistory: (id, params) => api.get(`/api/users/${id}/borrow-history`, { params }),
+  getInvites: (userId) => api.get(`/api/users/${userId}/invites`),
+  getInvitedBy: (userId) => api.get(`/api/users/${userId}/invited-by`),
 };
 
 // 借阅 API
