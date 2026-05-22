@@ -11,6 +11,7 @@ import PointsMall from './pages/PointsMall';
 import Notifications from './pages/Notifications';
 import Settings from './pages/Settings';
 import Tools from './pages/Tools';
+import Profile from './pages/Profile';
 import Login from './pages/Login';
 
 // 路由守卫
@@ -49,6 +50,7 @@ function App() {
             } />
             <Route path="points" element={<PointsMall />} />
             <Route path="tools" element={<Tools />} />
+            <Route path="profile" element={<Profile />} />
             <Route path="notifications" element={<Notifications />} />
             <Route path="settings" element={<Settings />} />
           </Route>

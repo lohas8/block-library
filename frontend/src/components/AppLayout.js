@@ -37,6 +37,7 @@ const AppLayout = () => {
 
   const userMenu = {
     items: [
+      { key: 'profile', label: '👤 个人中心' },
       { key: 'settings', label: '⚙️ 系统配置' },
       { type: 'divider' },
       { key: 'logout', label: '退出登录' }
@@ -49,6 +50,8 @@ const AppLayout = () => {
       navigate('/login');
     } else if (key === 'settings') {
       navigate('/settings');
+    } else if (key === 'profile') {
+      navigate('/profile');
     }
   };
 
