@@ -48,6 +48,7 @@ export const FEATURE_CONFIG = {
   bookManage: { label: '图书管理', desc: '图书的增删改查和分类管理' },
   userManage: { label: '用户管理', desc: '用户注册、权限分配和信息管理' },
   pointsMall: { label: '积分商城', desc: '积分兑换和积分记录查询' },
+  toolShare: { label: '工具共享', desc: '工具录入、租借和归还管理' },
 };
 
 export const store = configureStore({

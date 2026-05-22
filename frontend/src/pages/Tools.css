@@ -1,0 +1,26 @@
+.tools-page {
+  padding: 24px;
+}
+
+.tools-page h1 {
+  margin-bottom: 24px;
+}
+
+.tool-card-image {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.tool-status-available {
+  color: #52c41a;
+}
+
+.tool-status-borrowed {
+  color: #fa8c16;
+}
+
+.tools-page .ant-statistic-title {
+  font-size: 12px;
+}

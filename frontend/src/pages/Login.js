@@ -16,7 +16,7 @@ const Login = () => {
     setLoading(true);
     try {
       const res = await userApi.login(values);
-      dispatch(setUser(res.data));
+      dispatch(setUser(res));
       message.success('登录成功');
       navigate('/');
     } catch (error) {

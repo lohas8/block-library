@@ -18,6 +18,7 @@ const AppLayout = () => {
     { key: '/', icon: '📊', label: '仪表盘' },
     ...(features.bookManage ? [{ key: '/books', icon: '📚', label: '图书管理' }] : []),
     ...(features.borrow ? [{ key: '/borrow', icon: '📖', label: '借阅管理' }] : []),
+    ...(features.toolShare ? [{ key: '/tools', icon: '🛠️', label: '工具共享' }] : []),
     ...(features.userManage ? [{ key: '/users', icon: '👥', label: '用户管理' }] : []),
     ...(features.pointsMall ? [{ key: '/points', icon: '🎁', label: '积分商城' }] : []),
     { key: '/notifications', icon: '🔔', label: '通知' },

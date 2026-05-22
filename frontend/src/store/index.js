@@ -9,11 +9,20 @@ const userSlice = createSlice({
   },
   reducers: {
     setUser: (state, action) => {
-      state.token = action.payload.token;
-      state.info = action.payload.user;
-      if (action.payload.token) {
-        localStorage.setItem('token', action.payload.token);
-        localStorage.setItem('userInfo', JSON.stringify(action.payload.user));
+      // Support both { token, user } and flat API response { token, _id, username, ... }
+      const payload = action.payload;
+      if (payload.user !== undefined) {
+        state.token = payload.token;
+        state.info = payload.user;
+      } else {
+        // Flat format: extract token and user data from same object
+        state.token = payload.token;
+        const { token: _t, ...userData } = payload;
+        state.info = userData;
+      }
+      if (state.token) {
+        localStorage.setItem('token', state.token);
+        localStorage.setItem('userInfo', JSON.stringify(state.info));
       } else {
         localStorage.removeItem('token');
         localStorage.removeItem('userInfo');
@@ -111,12 +120,51 @@ const notificationSlice = createSlice({
   },
 });
 
+// 工具共享 slice
+const toolSlice = createSlice({
+  name: 'tools',
+  initialState: {
+    list: [],
+    total: 0,
+    currentTool: null,
+    categories: [],
+    statistics: null,
+  },
+  reducers: {
+    setTools: (state, action) => {
+      state.list = action.payload.list;
+      state.total = action.payload.total;
+    },
+    setCurrentTool: (state, action) => {
+      state.currentTool = action.payload;
+    },
+    setToolCategories: (state, action) => {
+      state.categories = action.payload;
+    },
+    setToolStatistics: (state, action) => {
+      state.statistics = action.payload;
+    },
+    addTool: (state, action) => {
+      state.list.unshift(action.payload);
+      state.total += 1;
+    },
+    updateTool: (state, action) => {
+      const idx = state.list.findIndex(t => t._id === action.payload._id);
+      if (idx !== -1) state.list[idx] = action.payload;
+    },
+    deleteTool: (state, action) => {
+      state.list = state.list.filter(t => t._id !== action.payload);
+      state.total -= 1;
+    },
+  },
+});
+
 // 配置 slice
 const settingsSlice = createSlice({
   name: 'settings',
   initialState: {
     theme: localStorage.getItem('theme') || 'light',
-    features: JSON.parse(localStorage.getItem('features') || '{"borrow":true,"bookManage":true,"userManage":true,"pointsMall":true}'),
+    features: JSON.parse(localStorage.getItem('features') || '{"borrow":true,"bookManage":true,"userManage":true,"pointsMall":true,"toolShare":true}'),
     permissions: JSON.parse(localStorage.getItem('permissions') || '{"adminRoles":["super_admin","admin"],"managerRoles":["admin","owner","property"],"userRoles":["owner","property","user"]}'),
   },
   reducers: {
@@ -141,6 +189,7 @@ export const { setUser, updatePoints, logout } = userSlice.actions;
 export const { setBooks, setCurrentBook, setCategories, addBook, updateBook, deleteBook } = bookSlice.actions;
 export const { setBorrowList, setReservations, setStatistics } = borrowSlice.actions;
 export const { setNotifications, setUnreadCount } = notificationSlice.actions;
+export const { setTools, setCurrentTool, setToolCategories, setToolStatistics, addTool, updateTool, deleteTool } = toolSlice.actions;
 export const { setTheme, toggleFeature, setPermissions } = settingsSlice.actions;
 
 // 重新导出配置
@@ -152,6 +201,7 @@ export const store = configureStore({
     books: bookSlice.reducer,
     borrow: borrowSlice.reducer,
     notification: notificationSlice.reducer,
+    tools: toolSlice.reducer,
     settings: settingsSlice.reducer,
   },
 });

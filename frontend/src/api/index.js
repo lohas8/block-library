@@ -81,4 +81,17 @@ export const notificationApi = {
   delete: (id) => api.delete(`/api/notifications/${id}`),
 };
 
+// 工具共享 API
+export const toolApi = {
+  list: (params) => api.get('/api/tools', { params }),
+  detail: (id) => api.get(`/api/tools/${id}`),
+  create: (data) => api.post('/api/tools', data),
+  update: (id, data) => api.put(`/api/tools/${id}`, data),
+  delete: (id) => api.delete(`/api/tools/${id}`),
+  categories: () => api.get('/api/tools/categories'),
+  rent: (data) => api.post('/api/tools/rent', data),
+  return: (id) => api.post(`/api/tools/return/${id}`),
+  statistics: () => api.get('/api/tools/statistics'),
+};
+
 export default api;

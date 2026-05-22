@@ -10,6 +10,7 @@ import UserManage from './pages/UserManage';
 import PointsMall from './pages/PointsMall';
 import Notifications from './pages/Notifications';
 import Settings from './pages/Settings';
+import Tools from './pages/Tools';
 import Login from './pages/Login';
 
 // 路由守卫
@@ -47,6 +48,7 @@ function App() {
               </AdminRoute>
             } />
             <Route path="points" element={<PointsMall />} />
+            <Route path="tools" element={<Tools />} />
             <Route path="notifications" element={<Notifications />} />
             <Route path="settings" element={<Settings />} />
           </Route>
