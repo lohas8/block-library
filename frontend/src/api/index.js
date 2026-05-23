@@ -96,4 +96,13 @@ export const toolApi = {
   statistics: () => api.get('/api/tools/statistics'),
 };
 
+// 小区管理 API
+export const communityApi = {
+  list: (params) => api.get('/api/communities', { params }),
+  detail: (id) => api.get(`/api/communities/${id}`),
+  create: (data) => api.post('/api/communities', data),
+  update: (id, data) => api.put(`/api/communities/${id}`, data),
+  delete: (id) => api.delete(`/api/communities/${id}`),
+};
+
 export default api;

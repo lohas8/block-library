@@ -12,6 +12,7 @@ import Notifications from './pages/Notifications';
 import Settings from './pages/Settings';
 import Tools from './pages/Tools';
 import Profile from './pages/Profile';
+import CommunityManage from './pages/CommunityManage';
 import Login from './pages/Login';
 
 // 路由守卫
@@ -23,7 +24,16 @@ const PrivateRoute = ({ children }) => {
 // 管理权限
 const AdminRoute = ({ children }) => {
   const { info } = useSelector(state => state.user);
-  if (!info || info.role !== 'admin') {
+  if (!info || info.role !== 'admin' && info.role !== 'super_admin') {
+    return <Navigate to="/" />;
+  }
+  return children;
+};
+
+// 超级管理员专属路由
+const SuperAdminRoute = ({ children }) => {
+  const { info } = useSelector(state => state.user);
+  if (!info || info.role !== 'super_admin') {
     return <Navigate to="/" />;
   }
   return children;
@@ -53,6 +63,11 @@ function App() {
             <Route path="profile" element={<Profile />} />
             <Route path="notifications" element={<Notifications />} />
             <Route path="settings" element={<Settings />} />
+            <Route path="communities" element={
+              <SuperAdminRoute>
+                <CommunityManage />
+              </SuperAdminRoute>
+            } />
           </Route>
         </Routes>
       </BrowserRouter>
