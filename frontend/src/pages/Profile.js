@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Form, Input, Button, message, Avatar, Divider, Tag, List, Modal, CopyToClipboard } from 'antd';
+import { Card, Form, Input, Button, message, Avatar, Divider, Tag, List, Modal } from 'antd';
 import { UserOutlined, MailOutlined, PhoneOutlined, IdcardOutlined, LinkOutlined, TeamOutlined } from '@ant-design/icons';
 import { userApi } from '../api';
 import { useSelector, useDispatch } from 'react-redux';
@@ -28,7 +28,7 @@ const Profile = () => {
   }, [info, form]);
 
   useEffect(() => {
-    if (inviteModalVisible) {
+    if (inviteModalVisible || true) {
       loadInviteData();
     }
   }, [inviteModalVisible, info]);
@@ -144,61 +144,62 @@ const Profile = () => {
         >
           邀请链接
         </Button>
+
+        {/* 邀请信息直接展示在页面 */}
+        <div style={{ marginTop: 16 }}>
+          {invitedBy ? (
+            <div style={{ marginBottom: 12 }}>
+              <span style={{ color: '#888', fontSize: 12 }}>🎁 邀请人：</span>
+              <Avatar size="small" style={{ marginLeft: 6, marginRight: 4 }}>{invitedBy.name?.[0]}</Avatar>
+              <span>{invitedBy.name}</span>
+              <Tag color="blue" style={{ marginLeft: 6 }}>{roleLabels[invitedBy.role]?.label || invitedBy.role}</Tag>
+            </div>
+          ) : (
+            <div style={{ color: '#888', fontSize: 12, marginBottom: 12 }}>🎁 暂无邀请人（自己是第一个加入的）</div>
+          )}
+
+          <div style={{ marginTop: 8 }}>
+            <span style={{ color: '#888', fontSize: 12 }}>👥 我邀请的人（{invites.length}人）</span>
+            {loadingInvites ? (
+              <div style={{ color: '#888', fontSize: 12, marginTop: 4 }}>加载中...</div>
+            ) : invites.length > 0 ? (
+              <List
+                size="small"
+                dataSource={invites}
+                style={{ marginTop: 6 }}
+                renderItem={item => (
+                  <List.Item style={{ padding: '4px 0' }}>
+                    <Avatar size="small" style={{ marginRight: 8 }}>{item.name?.[0]}</Avatar>
+                    <span style={{ flex: 1 }}>{item.name}</span>
+                    <Tag color="green">已邀请</Tag>
+                  </List.Item>
+                )}
+              />
+            ) : (
+              <div style={{ color: '#888', fontSize: 12, marginTop: 4 }}>暂无邀请记录</div>
+            )}
+          </div>
+        </div>
       </Card>
 
-      {/* 邀请弹窗 */}
+      {/* 邀请弹窗 - 仅邀请链接 */}
       <Modal
-        title="邀请功能"
+        title="邀请链接"
         open={inviteModalVisible}
         onCancel={() => setInviteModalVisible(false)}
         footer={null}
         width={500}
       >
         <div className="invite-section">
-          <h4>📎 邀请链接</h4>
           <p style={{ color: '#888', fontSize: 12, marginBottom: 8 }}>分享给邻居，邀请加入小区图书共享计划</p>
           <div className="invite-link-box">
             <Input value={inviteLink} readOnly suffix={
-              <CopyToClipboard text={inviteLink}>
-                <Button size="small" type="text" onClick={() => message.success('已复制！')}>复制</Button>
-              </CopyToClipboard>
+              <Button size="small" type="text" onClick={() => {
+                navigator.clipboard.writeText(inviteLink).then(() => message.success('已复制！'));
+              }}>复制</Button>
             } />
           </div>
-          <p style={{ color: '#888', fontSize: 12, marginTop: 4 }}>邀请码：<b>{inviteCode}</b>（分享给邻居，让他们输入此码注册）</p>
-
-          <Divider />
-
-          <h4>👥 我邀请的人 ({invites.length}人)</h4>
-          {loadingInvites ? (
-            <div style={{ color: '#888' }}>加载中...</div>
-          ) : invites.length > 0 ? (
-            <List
-              size="small"
-              dataSource={invites}
-              renderItem={item => (
-                <List.Item>
-                  <Avatar size="small" style={{ marginRight: 8 }}>{item.name?.[0]}</Avatar>
-                  <span style={{ flex: 1 }}>{item.name}</span>
-                  <Tag color="green">已邀请</Tag>
-                </List.Item>
-              )}
-            />
-          ) : (
-            <div style={{ color: '#888', padding: '8px 0' }}>暂无邀请记录</div>
-          )}
-
-          <Divider />
-
-          <h4>🎁 邀请我的人</h4>
-          {invitedBy ? (
-            <div className="inviter-info">
-              <Avatar style={{ marginRight: 8 }}>{invitedBy.name?.[0]}</Avatar>
-              <span>{invitedBy.name}</span>
-              <Tag color="blue" style={{ marginLeft: 8 }}>{roleLabels[invitedBy.role]?.label || invitedBy.role}</Tag>
-            </div>
-          ) : (
-            <div style={{ color: '#888', padding: '8px 0' }}>暂无邀请人（自己是第一个加入的）</div>
-          )}
+          <p style={{ color: '#888', fontSize: 12, marginTop: 8 }}>邀请码：<b>{inviteCode}</b>（分享给邻居，让他们输入此码注册）</p>
         </div>
       </Modal>
     </div>
