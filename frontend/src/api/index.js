@@ -53,6 +53,7 @@ export const userApi = {
   borrowHistory: (id, params) => api.get(`/api/users/${id}/borrow-history`, { params }),
   getInvites: (userId) => api.get(`/api/users/${userId}/invites`),
   getInvitedBy: (userId) => api.get(`/api/users/${userId}/invited-by`),
+  getAppliedRules: (userId) => api.get(`/api/users/${userId}/applied-rules`),
 };
 
 // 借阅 API
@@ -103,6 +104,19 @@ export const communityApi = {
   create: (data) => api.post('/api/communities', data),
   update: (id, data) => api.put(`/api/communities/${id}`, data),
   delete: (id) => api.delete(`/api/communities/${id}`),
+};
+
+// 规则管理 API
+export const ruleApi = {
+  list: (params) => api.get('/api/rules', { params }),
+  detail: (id) => api.get(`/api/rules/${id}`),
+  create: (data) => api.post('/api/rules', data),
+  update: (id, data) => api.put(`/api/rules/${id}`, data),
+  delete: (id) => api.delete(`/api/rules/${id}`),
+  apply: (ruleId, data) => api.post(`/api/rules/${ruleId}/apply`, data),
+  approve: (id) => api.post(`/api/rules/approvals/${id}/approve`),
+  reject: (id) => api.post(`/api/rules/approvals/${id}/reject`),
+  listApprovals: (params) => api.get('/api/rules/approvals', { params }),
 };
 
 export default api;

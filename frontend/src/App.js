@@ -13,6 +13,8 @@ import Settings from './pages/Settings';
 import Tools from './pages/Tools';
 import Profile from './pages/Profile';
 import CommunityManage from './pages/CommunityManage';
+import RuleManage from './pages/RuleManage';
+import ApplyRule from './pages/ApplyRule';
 import Login from './pages/Login';
 
 // 路由守卫
@@ -68,6 +70,12 @@ function App() {
                 <CommunityManage />
               </SuperAdminRoute>
             } />
+            <Route path="rules" element={
+              <AdminRoute>
+                <RuleManage />
+              </AdminRoute>
+            } />
+            <Route path="apply-rule" element={<ApplyRule />} />
           </Route>
         </Routes>
       </BrowserRouter>

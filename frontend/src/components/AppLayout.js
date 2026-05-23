@@ -22,6 +22,8 @@ const AppLayout = () => {
     ...(features.userManage ? [{ key: '/users', icon: '👥', label: '用户管理' }] : []),
     ...(features.pointsMall ? [{ key: '/points', icon: '🎁', label: '积分商城' }] : []),
     ...(info?.role === 'super_admin' ? [{ key: '/communities', icon: '🏠', label: '小区管理' }] : []),
+    ...(info?.role === 'admin' || info?.role === 'owner' || info?.role === 'super_admin' ? [{ key: '/rules', icon: '📋', label: '规则管理' }] : []),
+    ...(info?.role === 'user' || info?.role === 'owner' ? [{ key: '/apply-rule', icon: '📝', label: '积分申请' }] : []),
     { key: '/notifications', icon: '🔔', label: '通知' },
     { key: '/settings', icon: '⚙️', label: '配置' },
   ];
