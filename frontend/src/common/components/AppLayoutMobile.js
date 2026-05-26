@@ -12,7 +12,7 @@ const AppLayoutMobile = () => {
   const location = useLocation();
 
   const tabs = [
-    { key: '/mobile', title: '首页', icon: '🏠' },
+    { key: '/mobile', title: '议事', icon: '💬' },
     { key: '/mobile/books', title: '图书', icon: '📚' },
     { key: '/mobile/my-borrows', title: '借阅', icon: '📖' },
     { key: '/mobile/tools', title: '工具', icon: '🛠️' },

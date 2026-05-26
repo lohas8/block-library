@@ -1,78 +1,59 @@
 /* eslint-disable */
 const Controller = require('egg').Controller;
 
+/**
+ * CommentController - 评论控制器（瘦控制器，委托给 Service 层）
+ * 职责：参数解析、权限校验、HTTP 响应、异常捕获
+ * 业务逻辑：全部委托给 CommentService
+ */
 class CommentController extends Controller {
   // 评论列表
   async list() {
     const { ctx } = this;
-    const { topic_id } = ctx.query;
-    const { page = 1, pageSize = 20, sort = 'asc' } = ctx.query;
-
-    const query = { topic_id, is_deleted: false };
-    const total = await ctx.model.Comment.countDocuments(query);
-    const list = await ctx.model.Comment.find(query)
-      .select('content author_id author_name is_deleted created_at')
-      .skip((page - 1) * pageSize)
-      .limit(parseInt(pageSize))
-      .sort({ created_at: sort === 'asc' ? 1 : -1 });
-
-    ctx.success({ list, total, page: parseInt(page), pageSize: parseInt(pageSize) });
+    try {
+      const { topic_id, sort = 'asc', page = 1, pageSize = 20 } = ctx.query;
+      if (!topic_id) return ctx.fail('topic_id 不能为空');
+      const result = await ctx.service.comment.getList({ topic_id, sort, page, pageSize });
+      ctx.success(result);
+    } catch (err) {
+      ctx.fail('获取评论列表失败');
+    }
   }
 
-  // 发评论
+  // 发评论（全体已登录用户，议题不能是 closed 状态）
   async create() {
     const { ctx } = this;
-    const { topic_id } = ctx.params;
-    const { content } = ctx.request.body;
+    try {
+      if (!ctx.state.user) return ctx.fail('请先登录');
+      const { topic_id } = ctx.params;
+      const { content } = ctx.request.body;
+      if (!content || !content.trim()) return ctx.fail('评论内容不能为空');
+      if (content.length > 2000) return ctx.fail('评论内容最多2000字');
 
-    if (!ctx.state.user) return ctx.fail('请先登录');
-
-    const topic = await ctx.model.Topic.findById(topic_id);
-    if (!topic) return ctx.fail('议题不存在');
-    if (topic.status === 'closed') return ctx.fail('该议题已关闭，无法评论');
-
-    const comment = await ctx.model.Comment.create({
-      topic_id,
-      content,
-      author_id: ctx.state.user._id,
-      author_name: ctx.state.user.name,
-    });
-
-    // 更新议题统计
-    topic.comment_count += 1;
-    topic.last_activity_at = new Date();
-    // 重新计算热度
-    const hours = (Date.now() - new Date(topic.createdAt).getTime()) / (1000 * 60 * 60);
-    const decay = Math.exp(-0.15 * hours);
-    topic.hot_score = Math.round((topic.follow_count * 0.6 + topic.comment_count * 0.4) * decay * 100) / 100;
-    await topic.save();
-
-    ctx.success(comment, '评论成功');
+      const comment = await ctx.service.comment.create({
+        topic_id,
+        content: content.trim(),
+        author_id: ctx.state.user._id,
+        author_name: ctx.state.user.name,
+      });
+      ctx.success(comment, '评论成功');
+    } catch (err) {
+      ctx.fail(err.message || '评论失败');
+    }
   }
 
-  // 删除评论
+  // 删除评论（评论者本人 或 管理员）
   async delete() {
     const { ctx } = this;
-    const { topic_id, id } = ctx.params;
+    try {
+      if (!ctx.state.user) return ctx.fail('请先登录');
+      const { topic_id, id } = ctx.params;
 
-    const comment = await ctx.model.Comment.findById(id);
-    if (!comment || comment.is_deleted) return ctx.fail('评论不存在');
-
-    // 权限：评论者本人或管理员
-    const user = ctx.state.user;
-    if (!user || (String(comment.author_id) !== String(user._id) && user.role !== 'admin')) {
-      return ctx.fail('无权限删除此评论');
+      await ctx.service.comment.delete(id, topic_id, ctx.state.user._id, ctx.state.user.role);
+      ctx.success(null, '评论已删除');
+    } catch (err) {
+      ctx.fail(err.message || '删除评论失败');
     }
-
-    comment.is_deleted = true;
-    await comment.save();
-
-    // 更新议题评论数
-    await ctx.model.Topic.findByIdAndUpdate(topic_id, {
-      $inc: { comment_count: -1 },
-    });
-
-    ctx.success(null, '评论已删除');
   }
 }
 

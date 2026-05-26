@@ -21,6 +21,8 @@ import TopicDetail from './pages/TopicDetail';
 import CreateTopic from './pages/TopicCreate';
 import Login from './pages/Login';
 import MobileHome from './mobile/pages/MobileHome';
+import MobileTopicsList from './mobile/pages/MobileTopicsList';
+import MobileTopicDetail from './mobile/pages/MobileTopicDetail';
 import MobileBookList from './mobile/pages/MobileBookList';
 import MobileMyBorrows from './mobile/pages/MobileMyBorrows';
 import MobileProfile from './mobile/pages/MobileProfile';
@@ -97,13 +99,15 @@ function App() {
               <AppLayoutMobile />
             </PrivateRoute>
           }>
-            <Route index element={<MobileHome />} />
+            <Route index element={<MobileTopicsList />} />
             <Route path="books" element={<MobileBookList />} />
             <Route path="my-borrows" element={<MobileMyBorrows />} />
             <Route path="scan" element={<MobileScanBorrow />} />
             <Route path="tools" element={<MobileToolShare />} />
             <Route path="apply-rule" element={<MobileRuleApply />} />
             <Route path="profile" element={<MobileProfile />} />
+            <Route path="topics/create" element={<MobileTopicsList />} />
+            <Route path="topics/:id" element={<MobileTopicDetail />} />
           </Route>
         </Routes>
       </BrowserRouter>
