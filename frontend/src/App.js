@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Provider, useSelector } from 'react-redux';
 import { store } from './store';
 import AppLayout from './components/AppLayout';
+import AppLayoutMobile from './common/components/AppLayoutMobile';
 import Dashboard from './pages/Dashboard';
 import BookList from './pages/BookList';
 import BorrowManage from './pages/BorrowManage';
@@ -15,7 +16,17 @@ import Profile from './pages/Profile';
 import CommunityManage from './pages/CommunityManage';
 import RuleManage from './pages/RuleManage';
 import ApplyRule from './pages/ApplyRule';
+import TopicsList from './pages/TopicsList';
+import TopicDetail from './pages/TopicDetail';
+import CreateTopic from './pages/TopicCreate';
 import Login from './pages/Login';
+import MobileHome from './mobile/pages/MobileHome';
+import MobileBookList from './mobile/pages/MobileBookList';
+import MobileMyBorrows from './mobile/pages/MobileMyBorrows';
+import MobileProfile from './mobile/pages/MobileProfile';
+import MobileScanBorrow from './mobile/pages/MobileScanBorrow';
+import MobileToolShare from './mobile/pages/MobileToolShare';
+import MobileRuleApply from './mobile/pages/MobileRuleApply';
 
 // 路由守卫
 const PrivateRoute = ({ children }) => {
@@ -26,7 +37,7 @@ const PrivateRoute = ({ children }) => {
 // 管理权限
 const AdminRoute = ({ children }) => {
   const { info } = useSelector(state => state.user);
-  if (!info || info.role !== 'admin' && info.role !== 'super_admin') {
+  if (!info || (info.role !== 'admin' && info.role !== 'super_admin')) {
     return <Navigate to="/" />;
   }
   return children;
@@ -76,6 +87,23 @@ function App() {
               </AdminRoute>
             } />
             <Route path="apply-rule" element={<ApplyRule />} />
+            <Route path="topics" element={<TopicsList />} />
+            <Route path="topics/create" element={<CreateTopic />} />
+            <Route path="topics/:id" element={<TopicDetail />} />
+          </Route>
+          {/* Mobile Routes */}
+          <Route path="/mobile" element={
+            <PrivateRoute>
+              <AppLayoutMobile />
+            </PrivateRoute>
+          }>
+            <Route index element={<MobileHome />} />
+            <Route path="books" element={<MobileBookList />} />
+            <Route path="my-borrows" element={<MobileMyBorrows />} />
+            <Route path="scan" element={<MobileScanBorrow />} />
+            <Route path="tools" element={<MobileToolShare />} />
+            <Route path="apply-rule" element={<MobileRuleApply />} />
+            <Route path="profile" element={<MobileProfile />} />
           </Route>
         </Routes>
       </BrowserRouter>

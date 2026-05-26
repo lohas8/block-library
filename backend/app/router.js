@@ -43,4 +43,17 @@ module.exports = app => {
   router.post('/api/notifications/read-all', controller.notification.markAllRead);
   router.delete('/api/notifications/:id', controller.notification.delete);
   router.post('/api/notifications', controller.notification.create);
+
+  // 议事模块 - 议题
+  router.get('/api/topics', controller.topic.list);
+  router.get('/api/topics/:id', controller.topic.detail);
+  router.post('/api/topics', controller.topic.create);
+  router.put('/api/topics/:id/status', controller.topic.updateStatus);
+  router.put('/api/topics/:id/focus', controller.topic.setFocus);
+  router.post('/api/topics/:id/follow', controller.topic.follow);
+
+  // 议事模块 - 评论
+  router.get('/api/comments', controller.comment.list);
+  router.post('/api/topics/:topic_id/comments', controller.comment.create);
+  router.delete('/api/topics/:topic_id/comments/:id', controller.comment.delete);
 };

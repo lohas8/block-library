@@ -1,0 +1,65 @@
+.mobile-home {
+  padding-bottom: 20px;
+}
+
+.welcome-section {
+  background: linear-gradient(135deg, #1890ff, #096dd9);
+  color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.welcome-text {
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.points-badge {
+  display: inline-block;
+  margin-left: 12px;
+  font-size: 14px;
+  background: rgba(255,255,255,0.2);
+  padding: 4px 8px;
+  border-radius: 12px;
+}
+
+.quick-actions {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.action-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 14px 8px;
+  background: #fff;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.action-icon {
+  font-size: 24px;
+  margin-bottom: 6px;
+}
+
+.action-item span:last-child {
+  font-size: 12px;
+  color: #333;
+}
+
+.borrow-card,
+.tool-card {
+  margin-bottom: 12px;
+  border-radius: 8px;
+}
+
+.borrow-empty,
+.tool-empty {
+  color: #999;
+  font-size: 13px;
+  margin-bottom: 10px;
+}

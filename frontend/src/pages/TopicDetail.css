@@ -1,0 +1,116 @@
+.topic-detail-page {
+  padding: 24px;
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.topic-main-card {
+  border-radius: 12px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.topic-header {
+  margin-bottom: 24px;
+}
+
+.topic-title-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.topic-title-row h1 {
+  font-size: 22px;
+  font-weight: 600;
+  margin: 0;
+  flex: 1;
+}
+
+.topic-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #8c8c8c;
+  font-size: 13px;
+  flex-wrap: wrap;
+}
+
+.author-name {
+  font-weight: 500;
+  color: #262626;
+}
+
+.meta-dot {
+  color: #d9d9d9;
+}
+
+.admin-actions {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.topic-content {
+  font-size: 15px;
+  line-height: 1.8;
+  color: #262626;
+  padding: 16px 0;
+  border-top: 1px solid #f0f0f0;
+  white-space: pre-wrap;
+}
+
+.topic-footer {
+  padding-top: 16px;
+  border-top: 1px solid #f0f0f0;
+}
+
+/* 评论卡片 */
+.comments-card {
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.comment-input-area {
+  margin-bottom: 24px;
+}
+
+.comment-textarea {
+  width: 100%;
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 14px;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.comment-textarea:focus {
+  border-color: #1890ff;
+  box-shadow: 0 0 0 2px rgba(24,144,255,0.1);
+}
+
+.comment-list .ant-list-item {
+  padding: 16px 0;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.comment-author {
+  font-weight: 500;
+  color: #262626;
+}
+
+.comment-time {
+  font-size: 12px;
+  color: #8c8c8c;
+  margin-bottom: 6px;
+}
+
+.comment-content {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #262626;
+}
