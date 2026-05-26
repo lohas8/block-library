@@ -119,4 +119,20 @@ export const ruleApi = {
   listApprovals: (params) => api.get('/api/rules/approvals', { params }),
 };
 
+// 议事模块 API
+export const topicApi = {
+  list: (params) => api.get('/api/topics', { params }),
+  detail: (id) => api.get(`/api/topics/${id}`),
+  create: (data) => api.post('/api/topics', data),
+  updateStatus: (id, data) => api.put(`/api/topics/${id}/status`, data),
+  setFocus: (id, data) => api.put(`/api/topics/${id}/focus`, data),
+  follow: (id, data) => api.post(`/api/topics/${id}/follow`, data),
+};
+
+export const commentApi = {
+  list: (params) => api.get('/api/comments', { params }),
+  create: (topicId, data) => api.post(`/api/topics/${topicId}/comments`, data),
+  delete: (topicId, commentId) => api.delete(`/api/topics/${topicId}/comments/${commentId}`),
+};
+
 export default api;
