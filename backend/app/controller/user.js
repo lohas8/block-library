@@ -45,7 +45,7 @@ class UserController extends Controller {
 
     // 生成 token（简化处理，实际应使用 JWT）
     const token = Buffer.from(`${user._id}:${user.username}`).toString('base64');
-    
+
     ctx.success({
       token,
       user: {
@@ -63,31 +63,27 @@ class UserController extends Controller {
     const { ctx } = this;
     const { id } = ctx.params;
 
-    const user = await ctx.model.User.findById(id).select('-password');
-    if (!user) {
-      return ctx.fail('用户不存在');
+    try {
+      const user = await ctx.service.user.getDetail(id);
+      ctx.success(user);
+    } catch (e) {
+      ctx.fail(e.message);
     }
-
-    ctx.success(user);
   }
 
   // 更新用户信息
   async update() {
     const { ctx } = this;
     const { id } = ctx.params;
-    const { name, phone, email } = ctx.request.body;
+    const data = ctx.request.body;
+    const operator = ctx.state.user || {};
 
-    const user = await ctx.model.User.findByIdAndUpdate(
-      id,
-      { name, phone, email },
-      { new: true }
-    ).select('-password');
-
-    if (!user) {
-      return ctx.fail('用户不存在');
+    try {
+      const user = await ctx.service.user.update(id, data, operator.id, operator.role);
+      ctx.success(user, '更新成功');
+    } catch (e) {
+      ctx.fail(e.message);
     }
-
-    ctx.success(user, '更新成功');
   }
 
   // 获取用户列表（管理员）
@@ -95,38 +91,26 @@ class UserController extends Controller {
     const { ctx } = this;
     const { page = 1, pageSize = 10 } = ctx.query;
 
-    const total = await ctx.model.User.countDocuments();
-    const list = await ctx.model.User.find()
-      .select('-password')
-      .skip((page - 1) * pageSize)
-      .limit(parseInt(pageSize))
-      .sort({ createdAt: -1 });
-
-    ctx.success({ list, total, page: parseInt(page), pageSize: parseInt(pageSize) });
+    try {
+      const result = await ctx.service.user.getList({ page, pageSize });
+      ctx.success(result);
+    } catch (e) {
+      ctx.fail(e.message);
+    }
   }
 
   // 修改用户积分（管理员）
   async updatePoints() {
     const { ctx } = this;
     const { id } = ctx.params;
-    const { points, action } = ctx.request.body;  // action: add 或 subtract
+    const { points, action } = ctx.request.body;
 
-    const user = await ctx.model.User.findById(id);
-    if (!user) {
-      return ctx.fail('用户不存在');
+    try {
+      const result = await ctx.service.user.updatePoints(id, { points, action });
+      ctx.success({ points: result.points }, '积分更新成功');
+    } catch (e) {
+      ctx.fail(e.message);
     }
-
-    if (action === 'add') {
-      user.points += points;
-    } else {
-      if (user.points < points) {
-        return ctx.fail('积分不足');
-      }
-      user.points -= points;
-    }
-
-    await user.save();
-    ctx.success({ points: user.points }, '积分更新成功');
   }
 
   // 获取借阅记录
@@ -135,14 +119,12 @@ class UserController extends Controller {
     const { id } = ctx.params;
     const { page = 1, pageSize = 10 } = ctx.query;
 
-    const total = await ctx.model.BorrowRecord.countDocuments({ userId: id });
-    const list = await ctx.model.BorrowRecord.find({ userId: id })
-      .populate('bookId')
-      .skip((page - 1) * pageSize)
-      .limit(parseInt(pageSize))
-      .sort({ borrowDate: -1 });
-
-    ctx.success({ list, total, page: parseInt(page), pageSize: parseInt(pageSize) });
+    try {
+      const result = await ctx.service.user.getBorrowHistory(id, { page, pageSize });
+      ctx.success(result);
+    } catch (e) {
+      ctx.fail(e.message);
+    }
   }
 }
 
