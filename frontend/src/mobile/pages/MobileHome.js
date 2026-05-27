@@ -20,8 +20,8 @@ const STATUS_COLORS = {
   done: { bg: '#f5f5f5', color: '#999', label: '已结束' },
 };
 
-// 评分项配置（物业评价3项）
-const RATING_KEYS = [
+// 评分项配置（仅作 fallback：当年无配置时使用）
+const RATING_KEYS_FALLBACK = [
   { key: 'service', label: '整体服务', stars: '★★★★★' },
   { key: 'repair', label: '维修响应', stars: '★★★★☆' },
   { key: 'green', label: '环境绿化', stars: '★★★★★' },
@@ -35,22 +35,36 @@ const MobileHome = () => {
   const [focusedTopics, setFocusedTopics] = useState([]);
   const [votes, setVotes] = useState([]);
   const [topicList, setTopicList] = useState([]);
-  const [rateStats, setRateStats] = useState([]); // [{key, label, stars, avg, count}]
+  const [rateStats, setRateStats] = useState([]); // [{item_key, item_name, category_name, avg, count}]
 
-  // 加载物业评分统计
+  // 加载物业评价配置+统计
   useEffect(() => {
-    propertyRatingApi.stats({ year: new Date().getFullYear() })
-      .then(json => {
-        const data = json.data || json;
-        setRateStats(RATING_KEYS.map(k => ({
-          ...k,
-          avg: data[k.key]?.avg || 0,
-          count: data[k.key]?.count || 0,
-        })));
+    const year = new Date().getFullYear();
+    Promise.all([
+      propertyRatingApi.categories({ year }),
+      propertyRatingApi.stats({ year }),
+    ])
+      .then(([catJson, statJson]) => {
+        const categories = catJson.data || catJson || [];
+        const statsData = (statJson.data || statJson).items || [];
+        // 合并配置与统计
+        const merged = categories.flatMap(cat =>
+          (cat.items || []).map(item => {
+            const s = statsData.find(x => x.item_key === item.item_key);
+            return {
+              item_key: item.item_key,
+              item_name: item.item_name,
+              category_name: cat.name,
+              stars: '★★★★★',
+              avg: s?.avg || 0,
+              count: s?.count || 0,
+            };
+          })
+        );
+        setRateStats(merged.length > 0 ? merged : RATING_KEYS_FALLBACK.map(k => ({ ...k, avg: k.key === 'repair' ? 4.2 : (k.key === 'service' ? 4.8 : 4.9), count: 0 })));
       })
       .catch(() => {
-        // fallback hardcode
-        setRateStats(RATING_KEYS.map(k => ({ ...k, avg: k.key === 'repair' ? 4.2 : (k.key === 'service' ? 4.8 : 4.9), count: 0 })));
+        setRateStats(RATING_KEYS_FALLBACK.map(k => ({ ...k, avg: k.key === 'repair' ? 4.2 : (k.key === 'service' ? 4.8 : 4.9), count: 0 })));
       });
   }, []);
 

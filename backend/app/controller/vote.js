@@ -33,26 +33,12 @@ class VoteController extends Controller {
   async create() {
     const { ctx } = this;
     const operator = ctx.state.user || {};
+    if (!['admin', 'super_admin'].includes(operator.role)) {
+      return ctx.fail('无权限操作');
+    }
     try {
       const result = await ctx.service.vote.create(ctx.request.body, operator.id, operator.name);
       ctx.success(result, '投票创建成功');
-    } catch (e) {
-      ctx.fail(e.message);
-    }
-  }
-
-  // 投票
-  async castVote() {
-    const { ctx } = this;
-    const { id } = ctx.params;
-    const { selected_item_ids } = ctx.request.body;
-    const userId = ctx.state.user?.id;
-
-    if (!userId) return ctx.fail('请先登录');
-
-    try {
-      const result = await ctx.service.vote.castVote(id, userId, selected_item_ids);
-      ctx.success(result, '投票成功');
     } catch (e) {
       ctx.fail(e.message);
     }
@@ -62,9 +48,28 @@ class VoteController extends Controller {
   async close() {
     const { ctx } = this;
     const { id } = ctx.params;
+    const operator = ctx.state.user || {};
+    if (!['admin', 'super_admin'].includes(operator.role)) {
+      return ctx.fail('无权限操作');
+    }
     try {
       await ctx.model.Vote.findByIdAndUpdate(id, { status: 'closed' });
       ctx.success(null, '投票已结束');
+    } catch (e) {
+      ctx.fail(e.message);
+    }
+  }
+
+  // 投票（业主）
+  async castVote() {
+    const { ctx } = this;
+    const { id } = ctx.params;
+    const { selected_item_ids } = ctx.request.body;
+    const userId = ctx.state.user?.id;
+    if (!userId) return ctx.fail('请先登录');
+    try {
+      const result = await ctx.service.vote.castVote(id, userId, selected_item_ids);
+      ctx.success(result, '投票成功');
     } catch (e) {
       ctx.fail(e.message);
     }

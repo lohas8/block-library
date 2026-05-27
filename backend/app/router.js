@@ -65,7 +65,14 @@ module.exports = app => {
   router.post('/api/votes/:id/close', controller.vote.close);
 
   // 物业评价
-  router.get('/api/property-ratings', controller.propertyRating.list);
-  router.get('/api/property-ratings/stats', controller.propertyRating.stats);
-  router.post('/api/property-ratings', controller.propertyRating.create);
+  router.get('/api/property-ratings', controller.ratingCategory.list);
+  router.get('/api/property-ratings/stats', controller.ratingResult.stats);
+  router.post('/api/property-ratings', controller.ratingResult.submit);
+  router.get('/api/property-ratings/check', controller.ratingResult.check);
+
+  // 物业评价配置（管理员）
+  router.get('/api/rating-categories', controller.ratingCategory.list);
+  router.post('/api/rating-categories', controller.ratingCategory.create);
+  router.put('/api/rating-categories/:id', controller.ratingCategory.update);
+  router.delete('/api/rating-categories/:id', controller.ratingCategory.delete);
 };

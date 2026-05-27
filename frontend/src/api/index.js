@@ -146,8 +146,17 @@ export const voteApi = {
 
 // 物业评价 API
 export const propertyRatingApi = {
+  // 获取评价配置（管理员配置的大项+小项）
+  categories: (params) => apiInstance.get('/api/rating-categories', { params }),
+  createCategory: (data) => apiInstance.post('/api/rating-categories', data),
+  updateCategory: (id, data) => apiInstance.put(`/api/rating-categories/${id}`, data),
+  deleteCategory: (id) => apiInstance.delete(`/api/rating-categories/${id}`),
+  // 评分统计（卡片展示用）
   stats: (params) => apiInstance.get('/api/property-ratings/stats', { params }),
-  create: (data) => apiInstance.post('/api/property-ratings', data),
+  // 业主提交评价
+  submit: (data) => apiInstance.post('/api/property-ratings', data),
+  // 检查是否已提交
+  check: (params) => apiInstance.get('/api/property-ratings/check', { params }),
 };
 
 export default apiInstance;
