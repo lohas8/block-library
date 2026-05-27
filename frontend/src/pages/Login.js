@@ -4,11 +4,14 @@ import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { userApi } from '../api';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../store';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
+  const isMobile = location.pathname.startsWith('/mobile');
+  const redirectTo = isMobile ? '/mobile' : '/';
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('login');
 
@@ -18,7 +21,7 @@ const Login = () => {
       const res = await userApi.login(values);
       dispatch(setUser(res));
       message.success('登录成功');
-      navigate('/');
+      navigate(redirectTo);
     } catch (error) {
       message.error(error.response?.data?.msg || '登录失败');
     }

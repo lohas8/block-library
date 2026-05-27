@@ -4,6 +4,7 @@ import { Provider, useSelector } from 'react-redux';
 import { store } from './store';
 import AppLayout from './components/AppLayout';
 import AppLayoutMobile from './common/components/AppLayoutMobile';
+import AppLayoutMobileYishi from './common/components/AppLayoutMobileYishi';
 import Dashboard from './pages/Dashboard';
 import BookList from './pages/BookList';
 import BorrowManage from './pages/BorrowManage';
@@ -23,6 +24,8 @@ import Login from './pages/Login';
 import MobileHome from './mobile/pages/MobileHome';
 import MobileTopicsList from './mobile/pages/MobileTopicsList';
 import MobileTopicDetail from './mobile/pages/MobileTopicDetail';
+import MobileTopicCreate from './mobile/pages/MobileTopicCreate';
+import MobileVoteDetail from './mobile/pages/MobileVoteDetail';
 import MobileBookList from './mobile/pages/MobileBookList';
 import MobileMyBorrows from './mobile/pages/MobileMyBorrows';
 import MobileProfile from './mobile/pages/MobileProfile';
@@ -43,6 +46,12 @@ const AdminRoute = ({ children }) => {
     return <Navigate to="/" />;
   }
   return children;
+};
+
+// 手机端路由守卫（跳转手机端登录页）
+const MobilePrivateRoute = ({ children }) => {
+  const { token } = useSelector(state => state.user);
+  return token ? children : <Navigate to="/mobile/login" />;
 };
 
 // 超级管理员专属路由
@@ -93,22 +102,29 @@ function App() {
             <Route path="topics/create" element={<CreateTopic />} />
             <Route path="topics/:id" element={<TopicDetail />} />
           </Route>
-          {/* Mobile Routes */}
+          {/* Mobile Routes - 议事风格 */}
           <Route path="/mobile" element={
-            <PrivateRoute>
-              <AppLayoutMobile />
-            </PrivateRoute>
+            <MobilePrivateRoute>
+              <AppLayoutMobileYishi />
+            </MobilePrivateRoute>
           }>
-            <Route index element={<MobileTopicsList />} />
+            <Route index element={<MobileHome />} />
+            <Route path="topics" element={<MobileTopicsList />} />
+            <Route path="topics/create" element={<MobileTopicCreate />} />
+            <Route path="topics/:id" element={<MobileTopicDetail />} />
+            <Route path="votes/:id" element={<MobileVoteDetail />} />
+            <Route path="garden" element={<MobileProfile />} />
+            <Route path="ai" element={<MobileProfile />} />
+            <Route path="square" element={<MobileProfile />} />
+            <Route path="profile" element={<MobileProfile />} />
             <Route path="books" element={<MobileBookList />} />
             <Route path="my-borrows" element={<MobileMyBorrows />} />
             <Route path="scan" element={<MobileScanBorrow />} />
             <Route path="tools" element={<MobileToolShare />} />
             <Route path="apply-rule" element={<MobileRuleApply />} />
-            <Route path="profile" element={<MobileProfile />} />
-            <Route path="topics/create" element={<MobileTopicsList />} />
-            <Route path="topics/:id" element={<MobileTopicDetail />} />
           </Route>
+          {/* 手机端登录页（独立路由，无需鉴权） */}
+          <Route path="/mobile/login" element={<Login />} />
         </Routes>
       </BrowserRouter>
     </Provider>

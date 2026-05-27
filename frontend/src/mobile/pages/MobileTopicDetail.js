@@ -3,7 +3,7 @@
  */
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Textarea, Button, Avatar, Empty, DotLoading, Dialog } from 'antd-mobile';
+import { TextArea, Button, Avatar, Empty, DotLoading, Dialog } from 'antd-mobile';
 import './MobileTopics.css';
 
 const STATUS_COLORS = {
@@ -174,7 +174,7 @@ const MobileTopicDetail = () => {
       {/* Comment Input */}
       {topic.status !== 'closed' && (
         <div className="comment-input-area">
-          <Textarea
+          <TextArea
             placeholder="说点什么..."
             value={commentText}
             onChange={setCommentText}
