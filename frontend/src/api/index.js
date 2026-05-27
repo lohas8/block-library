@@ -135,5 +135,20 @@ export const commentApi = {
   delete: (topicId, commentId) => apiInstance.delete(`/api/topics/${topicId}/comments/${commentId}`),
 };
 
+// 投票 API
+export const voteApi = {
+  list: (params) => apiInstance.get('/api/votes', { params }),
+  detail: (id) => apiInstance.get(`/api/votes/${id}`),
+  create: (data) => apiInstance.post('/api/votes', data),
+  castVote: (id, data) => apiInstance.post(`/api/votes/${id}/cast`, data),
+  close: (id) => apiInstance.post(`/api/votes/${id}/close`),
+};
+
+// 物业评价 API
+export const propertyRatingApi = {
+  stats: (params) => apiInstance.get('/api/property-ratings/stats', { params }),
+  create: (data) => apiInstance.post('/api/property-ratings', data),
+};
+
 export default apiInstance;
 export const api = apiInstance;

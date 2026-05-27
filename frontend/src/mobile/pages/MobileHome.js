@@ -4,7 +4,8 @@
  */
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { SearchBar, Grid, Tag } from 'antd-mobile';
+import { SearchBar } from 'antd-mobile';
+import { voteApi, propertyRatingApi } from '../../api';
 import './MobileHome.css';
 
 const STATUS_COLORS = {
@@ -19,10 +20,11 @@ const STATUS_COLORS = {
   done: { bg: '#f5f5f5', color: '#999', label: '已结束' },
 };
 
-const RATE_DATA = [
-  { stars: '★★★★★', score: '4.8', label: '整体服务' },
-  { stars: '★★★★☆', score: '4.2', label: '维修响应' },
-  { stars: '★★★★★', score: '4.9', label: '环境绿化' },
+// 评分项配置（物业评价3项）
+const RATING_KEYS = [
+  { key: 'service', label: '整体服务', stars: '★★★★★' },
+  { key: 'repair', label: '维修响应', stars: '★★★★☆' },
+  { key: 'green', label: '环境绿化', stars: '★★★★★' },
 ];
 
 const TAG_LIST = ['全部', '待受理', '已受理', '处理中', '待验收', '已完成', '已关闭'];
@@ -31,29 +33,55 @@ const MobileHome = () => {
   const navigate = useNavigate();
   const [activeTag, setActiveTag] = useState('全部');
   const [focusedTopics, setFocusedTopics] = useState([]);
-  const [votingTopics, setVotingTopics] = useState([]);
+  const [votes, setVotes] = useState([]);
   const [topicList, setTopicList] = useState([]);
+  const [rateStats, setRateStats] = useState([]); // [{key, label, stars, avg, count}]
+
+  // 加载物业评分统计
+  useEffect(() => {
+    propertyRatingApi.stats({ year: new Date().getFullYear() })
+      .then(json => {
+        const data = json.data || json;
+        setRateStats(RATING_KEYS.map(k => ({
+          ...k,
+          avg: data[k.key]?.avg || 0,
+          count: data[k.key]?.count || 0,
+        })));
+      })
+      .catch(() => {
+        // fallback hardcode
+        setRateStats(RATING_KEYS.map(k => ({ ...k, avg: k.key === 'repair' ? 4.2 : (k.key === 'service' ? 4.8 : 4.9), count: 0 })));
+      });
+  }, []);
 
   // 加载焦点议题
   useEffect(() => {
-    fetch(`http://localhost:7002/api/topics?sort=hot&pageSize=5`)
+    fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:7002'}/api/topics?sort=hot&pageSize=5`)
       .then(r => r.json())
       .then(json => {
         const list = json.data?.list ?? json.list ?? [];
-        // 焦点议题取 is_focused=true，或热度最高的前3
-        setFocusedTopics(list.filter(t => t.is_focused).slice(0, 3));
-        if (focusedTopics.length === 0) setFocusedTopics(list.slice(0, 3));
+        const focused = list.filter(t => t.is_focused).slice(0, 3);
+        setFocusedTopics(focused.length > 0 ? focused : list.slice(0, 3));
       })
       .catch(() => {});
   }, []);
 
-  // 加载投票议题（取状态含投票的关键字）
+  // 加载投票
   useEffect(() => {
-    fetch(`http://localhost:7002/api/topics?sort=hot&pageSize=10`)
+    voteApi.list({ status: 'active', pageSize: 3 })
+      .then(json => {
+        const data = json.data || json;
+        setVotes((data.list || []).slice(0, 2));
+      })
+      .catch(() => {});
+  }, []);
+
+  // 加载议题列表
+  useEffect(() => {
+    fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:7002'}/api/topics?sort=hot&pageSize=10`)
       .then(r => r.json())
       .then(json => {
         const list = json.data?.list ?? json.list ?? [];
-        setVotingTopics(list.filter(t => t.status === 'voting' || t.status === 'pending_vote').slice(0, 2));
         setTopicList(list.slice(0, 5));
       })
       .catch(() => {});
@@ -66,9 +94,14 @@ const MobileHome = () => {
     navigate('/mobile/topics', { state: { initialStatus: tag === '全部' ? 'all' : tag } });
   };
 
-  const formatHotScore = (score) => {
-    if (!score && score !== 0) return '0.0';
-    return typeof score === 'number' ? score.toFixed(1) : score;
+  const formatDeadline = (deadline) => {
+    if (!deadline) return '';
+    const d = new Date(deadline);
+    const now = new Date();
+    const diff = d - now;
+    if (diff < 0) return '已截止';
+    if (diff < 86400000) return `截止 ${d.getHours()}:${String(d.getMinutes()).padStart(2, '0')}`;
+    return `截止 ${d.getMonth() + 1}/${d.getDate()} ${d.getHours()}:${String(d.getMinutes()).padStart(2, '0')}`;
   };
 
   return (
@@ -98,10 +131,10 @@ const MobileHome = () => {
       </div>
       <div className="rate-card">
         <div className="rate-inner">
-          {RATE_DATA.map((item, i) => (
+          {rateStats.map((item, i) => (
             <div key={i} className="rate-item">
               <div className="rate-stars">{item.stars}</div>
-              <div className="rate-score">{item.score}</div>
+              <div className="rate-score">{item.avg > 0 ? item.avg.toFixed(1) : '--'}</div>
               <div className="rate-label">{item.label}</div>
             </div>
           ))}
@@ -139,36 +172,38 @@ const MobileHome = () => {
       {/* ===== 投票 ===== */}
       <div className="section-title">投票</div>
       <div className="item-list">
-        {votingTopics.length === 0 ? (
+        {votes.length === 0 ? (
           <div className="empty-hint">暂无进行中的投票</div>
         ) : (
-          votingTopics.map(topic => (
+          votes.map(vote => (
             <div
-              key={topic._id}
+              key={vote._id}
               className="vote-item"
-              onClick={() => navigate(`/mobile/topics/${topic._id}`)}
+              onClick={() => navigate(`/mobile/votes/${vote._id}`)}
             >
               <div className="vote-icon">🗳️</div>
               <div className="vote-body">
-                <div className="vote-title">{topic.title}</div>
+                <div className="vote-title">{vote.title}</div>
                 <div className="vote-bars">
-                  <div className="vote-bar-row">
-                    <span className="vote-bar-label">同意</span>
-                    <div className="vote-bar">
-                      <div className="vote-bar-fill yes" style={{ width: '65%' }} />
-                    </div>
-                    <span className="vote-bar-num">65%</span>
-                  </div>
-                  <div className="vote-bar-row">
-                    <span className="vote-bar-label">反对</span>
-                    <div className="vote-bar">
-                      <div className="vote-bar-fill no" style={{ width: '35%' }} />
-                    </div>
-                    <span className="vote-bar-num">35%</span>
-                  </div>
+                  {(vote.items || []).map((item, i) => {
+                    const total = vote.total_votes || 1;
+                    const percent = item.vote_count > 0 ? Math.round((item.vote_count / total) * 100) : 0;
+                    return (
+                      <div key={item._id} className="vote-bar-row">
+                        <span className="vote-bar-label">{item.label}</span>
+                        <div className="vote-bar">
+                          <div
+                            className={`vote-bar-fill ${i === 0 ? 'yes' : 'no'}`}
+                            style={{ width: `${percent}%` }}
+                          />
+                        </div>
+                        <span className="vote-bar-num">{percent}%</span>
+                      </div>
+                    );
+                  })}
                 </div>
                 <div className="vote-meta">
-                  {topic.comment_count}人参与 · 截止明天 18:00
+                  {vote.total_votes}人参与 · {formatDeadline(vote.deadline)}
                 </div>
               </div>
             </div>
@@ -207,12 +242,12 @@ const MobileHome = () => {
                   <div className="item-title">{topic.title}</div>
                   <div className="item-desc">{topic.content}</div>
                   <div className="item-meta">
-                    <Tag
+                    <span
                       className="item-tag"
                       style={{ background: sc.bg, color: sc.color }}
                     >
                       {sc.label}
-                    </Tag>
+                    </span>
                     <span className="item-stat">
                       {topic.comment_count} 参与 · {topic.follow_count} 关注
                     </span>

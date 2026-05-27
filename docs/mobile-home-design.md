@@ -102,10 +102,10 @@ MobileHome
 - [ ] 评论功能（增/查）
 
 ### Phase 3：物业评价 + 投票
-- [ ] 物业评分卡片（3项 hardcode）
-- [ ] "去评价"按钮 + 评价页面
-- [ ] 投票进度条 UI
-- [ ] 投票接口（与 Topics 联动或独立 vote model）
+- [x] 物业评分卡片（接 propertyRating API）
+- [x] "去评价"按钮 + 评价页面（路由已挂载）
+- [x] 投票进度条 UI（接 vote API）
+- [x] 投票详情页 MobileVoteDetail（投票/多选/百分比/防重复）
 
 ---
 

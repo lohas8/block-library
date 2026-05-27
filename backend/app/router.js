@@ -56,4 +56,16 @@ module.exports = app => {
   router.get('/api/comments', controller.comment.list);
   router.post('/api/topics/:topic_id/comments', controller.comment.create);
   router.delete('/api/topics/:topic_id/comments/:id', controller.comment.delete);
+
+  // 投票模块
+  router.get('/api/votes', controller.vote.list);
+  router.get('/api/votes/:id', controller.vote.detail);
+  router.post('/api/votes', controller.vote.create);
+  router.post('/api/votes/:id/cast', controller.vote.castVote);
+  router.post('/api/votes/:id/close', controller.vote.close);
+
+  // 物业评价
+  router.get('/api/property-ratings', controller.propertyRating.list);
+  router.get('/api/property-ratings/stats', controller.propertyRating.stats);
+  router.post('/api/property-ratings', controller.propertyRating.create);
 };
