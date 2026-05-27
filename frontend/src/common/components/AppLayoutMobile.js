@@ -1,6 +1,6 @@
 /**
  * AppLayoutMobile - 手机端布局组件
- * 使用 antd-mobile v5
+ * 使用 antd-mobile TabBar
  */
 import React from 'react';
 import { useNavigate, useLocation, Outlet } from 'react-router-dom';
