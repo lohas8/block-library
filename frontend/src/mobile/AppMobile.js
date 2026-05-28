@@ -20,6 +20,7 @@ import MobileTopicDetail from './pages/MobileTopicDetail';
 import MobileTopicCreate from './pages/MobileTopicCreate';
 import MobileVoteDetail from './pages/MobileVoteDetail';
 import MobileGarden from './pages/MobileGarden';
+import MobileSquare from './pages/MobileSquare';
 import Login from '../pages/Login';
 
 const PrivateRoute = ({ children }) => {
@@ -38,7 +39,7 @@ const YishiRoutes = () => (
       <Route path="votes/:id" element={<MobileVoteDetail />} />
       <Route path="garden" element={<MobileGarden />} />
       <Route path="ai" element={<MobileProfile />} />
-      <Route path="square" element={<MobileProfile />} />
+      <Route path="square" element={<MobileSquare />} />
     </Routes>
   </AppLayoutMobileYishi>
 );
