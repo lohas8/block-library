@@ -3,7 +3,6 @@
  * 按小区/楼栋分类展示业主贡献积分排行
  */
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import './MobileGarden.css';
 
 // 贡献等级配置
@@ -79,7 +78,7 @@ const Stars = ({ level }) => {
 };
 
 const MobileGarden = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate(); // TODO: 接入真实API后启用
   const [view, setView] = useState('building'); // 'building' | 'community'
   const [expandedBuilding, setExpandedBuilding] = useState(null);
   const [buildings, setBuildings] = useState([]);
