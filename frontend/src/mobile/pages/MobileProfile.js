@@ -19,22 +19,20 @@ const MobileProfile = () => {
 
   return (
     <div className="mobile-profile">
-      <Card className="profile-header">
-        <Card.Body>
-          <div className="profile-info">
-            <Avatar size={64} style={{ backgroundColor: '#1890ff' }}>
-              {info?.name?.[0] || '用户'}
-            </Avatar>
-            <div className="profile-detail">
-              <div className="profile-name">{info?.name || '用户'}</div>
-              <div className="profile-role">{info?.role || '普通用户'}</div>
-              <div className="profile-points">💰 {info?.points || 0} 积分</div>
-            </div>
+      <Card className="profile-header" bodyClassName="profile-card-body">
+        <div className="profile-info">
+          <Avatar size={64} style={{ backgroundColor: '#1890ff' }}>
+            {info?.name?.[0] || '用户'}
+          </Avatar>
+          <div className="profile-detail">
+            <div className="profile-name">{info?.name || '用户'}</div>
+            <div className="profile-role">{info?.role || '普通用户'}</div>
+            <div className="profile-points">💰 {info?.points || 0} 积分</div>
           </div>
-        </Card.Body>
+        </div>
       </Card>
 
-      <Card className="profile-menu">
+      <Card className="profile-menu" bodyClassName="profile-card-body">
         <List>
           <List.Item prefix="📚" onClick={() => navigate('/mobile/my-borrows')}>
             我的借阅

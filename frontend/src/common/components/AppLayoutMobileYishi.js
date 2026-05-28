@@ -7,6 +7,30 @@ import React from 'react';
 import { useNavigate, useLocation, Outlet } from 'react-router-dom';
 import './AppLayoutMobileYishi.css';
 
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+  componentDidCatch(error, info) {
+    console.error('Garden ErrorBoundary caught:', error.message, info);
+  }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{ padding: 20, textAlign: 'center', color: '#666' }}>
+          <div style={{ fontSize: 18, marginBottom: 8 }}>⚠️ 页面加载失败</div>
+          <div style={{ fontSize: 13, color: '#999' }}>请尝试重新打开</div>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 const tabs = [
   { key: '/mobile', title: '议事', icon: '💬' },
   { key: '/mobile/garden', title: '家园', icon: '🏡' },
@@ -22,7 +46,9 @@ const AppLayoutMobileYishi = () => {
   return (
     <div className="mobile-layout-yishi">
       <div className="mobile-content">
-        <Outlet />
+        <ErrorBoundary>
+          <Outlet />
+        </ErrorBoundary>
       </div>
       <div className="bottom-nav">
         {tabs.map(tab => {
