@@ -1,15 +1,28 @@
 /* Dashboard 页面样式 */
 
 .dashboard-page {
-  padding: 24px;
+  padding: 32px;
 }
 
 .dashboard-section-title {
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 600;
   color: #1a1a1a;
   margin-top: 24px;
   margin-bottom: 12px;
+}
+
+/* 卡片统一样式 */
+.dashboard-page .ant-card {
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.empty-hint {
+  text-align: center;
+  color: #999;
+  padding: 24px 0;
+  font-size: 14px;
 }
 
 /* 颜色常量（供 valueStyle 使用） */

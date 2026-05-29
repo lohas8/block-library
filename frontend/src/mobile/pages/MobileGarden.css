@@ -8,7 +8,7 @@
 
 /* ===== Header ===== */
 .garden-header {
-  background: linear-gradient(135deg, #2e7d32 0%, #4caf50 100%);
+  background: #2E7D32;
   color: #fff;
   padding: 18px 16px 14px;
 }
@@ -58,7 +58,7 @@
 
 .building-card {
   background: #fff;
-  border-radius: 10px;
+  border-radius: 12px;
   margin-bottom: 10px;
   overflow: hidden;
   box-shadow: 0 1px 4px rgba(0,0,0,0.08);
@@ -68,7 +68,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 14px;
+  padding: 12px 16px;
   background: #fff;
   cursor: pointer;
   border-bottom: 1px solid #f0f0f0;
@@ -92,6 +92,10 @@
   background: #e8f5e9;
   padding: 2px 8px;
   border-radius: 10px;
+}
+
+.building-header:hover {
+  background: #fafafa;
 }
 
 .expand-icon {
@@ -156,7 +160,7 @@
 .name {
   flex: 1;
   font-size: 14px;
-  color: #333;
+  color: #1A1A1A;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -183,7 +187,7 @@
 }
 
 .community-banner {
-  background: linear-gradient(135deg, #1b5e20, #43a047);
+  background: #1b5e20;
   border-radius: 12px;
   padding: 20px;
   color: #fff;

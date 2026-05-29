@@ -17,6 +17,7 @@ const Dashboard = () => {
   const [stats, setStats] = useState(null);
   const [topBooks, setTopBooks] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     loadData();
@@ -56,12 +57,24 @@ const Dashboard = () => {
       setTopBooks(sorted);
     } catch (error) {
       console.error('获取数据失败', error);
+      setError('数据加载失败，请稍后重试');
     }
     setLoading(false);
   };
 
   if (loading || !stats) {
     return <div className="dashboard-loading">加载中...</div>;
+  }
+
+  if (error) {
+    return (
+      <div className="dashboard-page">
+        <h1>📊 数据概览</h1>
+        <Card style={{ textAlign: 'center', color: '#ff4d4f' }}>
+          <div style={{ fontSize: 16 }}>{error}</div>
+        </Card>
+      </div>
+    );
   }
 
   return (
@@ -114,7 +127,7 @@ const Dashboard = () => {
       </Row>
 
       {/* 借阅排行 */}
-      {topBooks.length > 0 && (
+      {topBooks.length > 0 ? (
         <Row gutter={16} style={{ marginTop: 24 }}>
           <Col span={24}>
             <Card title="🏆 图书借阅排行（Top 5）">
@@ -128,6 +141,14 @@ const Dashboard = () => {
                   </List.Item>
                 )}
               />
+            </Card>
+          </Col>
+        </Row>
+      ) : (
+        <Row gutter={16} style={{ marginTop: 24 }}>
+          <Col span={24}>
+            <Card title="🏆 图书借阅排行（Top 5）">
+              <div className="empty-hint">暂无借阅记录</div>
             </Card>
           </Col>
         </Row>
