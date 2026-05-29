@@ -1,7 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Row, Col, Statistic, Table, List, Tag } from 'antd';
+import { Card, Row, Col, Statistic, List, Tag } from 'antd';
 import { BookOutlined, UserOutlined, ReadOutlined, ToolOutlined, DollarOutlined } from '@ant-design/icons';
 import { borrowApi, toolApi } from '../api';
+import './Dashboard.css';
+
+// 颜色常量（供 valueStyle 使用）
+export const COLOR = {
+  success: '#52c41a',
+  warning: '#fa8c16',
+  error: '#ff4d4f',
+  info: '#1890ff',
+  purple: '#722ed1',
+};
 
 const Dashboard = () => {
   const [stats, setStats] = useState(null);
@@ -51,55 +61,55 @@ const Dashboard = () => {
   };
 
   if (loading || !stats) {
-    return <div style={{ padding: 24 }}>加载中...</div>;
+    return <div className="dashboard-loading">加载中...</div>;
   }
 
   return (
-    <div style={{ padding: 24 }}>
+    <div className="dashboard-page">
       <h1>📊 数据概览</h1>
 
       {/* 图书统计 */}
-      <h3 style={{ marginTop: 24, marginBottom: 12 }}>📚 图书</h3>
+      <div className="dashboard-section-title">📚 图书</div>
       <Row gutter={16}>
         <Col span={6}>
           <Card><Statistic title="图书总量" value={stats.totalBooks} prefix={<BookOutlined />} /></Card>
         </Col>
         <Col span={6}>
-          <Card><Statistic title="可借" value={stats.booksAvailable} valueStyle={{ color: '#52c41a' }} prefix={<ReadOutlined />} /></Card>
+          <Card><Statistic title="可借" value={stats.booksAvailable} valueStyle={{ color: COLOR.success }} prefix={<ReadOutlined />} /></Card>
         </Col>
         <Col span={6}>
-          <Card><Statistic title="借阅中" value={stats.booksBorrowed} valueStyle={{ color: '#fa8c16' }} prefix={<BookOutlined />} /></Card>
+          <Card><Statistic title="借阅中" value={stats.booksBorrowed} valueStyle={{ color: COLOR.warning }} prefix={<BookOutlined />} /></Card>
         </Col>
         <Col span={6}>
-          <Card><Statistic title="超期" value={stats.booksOverdue || 0} valueStyle={{ color: '#ff4d4f' }} /></Card>
+          <Card><Statistic title="超期" value={stats.booksOverdue || 0} valueStyle={{ color: COLOR.error }} /></Card>
         </Col>
       </Row>
 
       {/* 用户统计 */}
-      <h3 style={{ marginTop: 24, marginBottom: 12 }}>👥 用户与积分</h3>
+      <div className="dashboard-section-title">👥 用户与积分</div>
       <Row gutter={16}>
         <Col span={8}>
           <Card><Statistic title="用户总数" value={stats.totalUsers} prefix={<UserOutlined />} /></Card>
         </Col>
         <Col span={8}>
-          <Card><Statistic title="积分总量" value={stats.totalPoints || 0} prefix={<DollarOutlined />} valueStyle={{ color: '#1890ff' }} /></Card>
+          <Card><Statistic title="积分总量" value={stats.totalPoints || 0} prefix={<DollarOutlined />} valueStyle={{ color: COLOR.info }} /></Card>
         </Col>
         <Col span={8}>
-          <Card><Statistic title="本月借阅" value={stats.thisMonth || 0} valueStyle={{ color: '#722ed1' }} /></Card>
+          <Card><Statistic title="本月借阅" value={stats.thisMonth || 0} valueStyle={{ color: COLOR.purple }} /></Card>
         </Col>
       </Row>
 
       {/* 工具统计 */}
-      <h3 style={{ marginTop: 24, marginBottom: 12 }}>🛠️ 工具共享</h3>
+      <div className="dashboard-section-title">🛠️ 工具共享</div>
       <Row gutter={16}>
         <Col span={8}>
           <Card><Statistic title="工具总量" value={stats.totalTools} prefix={<ToolOutlined />} /></Card>
         </Col>
         <Col span={8}>
-          <Card><Statistic title="可借" value={stats.toolsAvailable} valueStyle={{ color: '#52c41a' }} /></Card>
+          <Card><Statistic title="可借" value={stats.toolsAvailable} valueStyle={{ color: COLOR.success }} /></Card>
         </Col>
         <Col span={8}>
-          <Card><Statistic title="已借出" value={stats.toolsBorrowed} valueStyle={{ color: '#fa8c16' }} /></Card>
+          <Card><Statistic title="已借出" value={stats.toolsBorrowed} valueStyle={{ color: COLOR.warning }} /></Card>
         </Col>
       </Row>
 

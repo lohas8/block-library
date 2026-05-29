@@ -3,7 +3,7 @@
 }
 
 .app-sider {
-  background: #001529 !important;
+  background: #1A1A1A !important;
 }
 
 .app-sider .logo {
@@ -12,10 +12,10 @@
   text-align: center;
   color: #fff;
   font-size: 16px;
-  font-weight: bold;
+  font-weight: 600;
   letter-spacing: 1px;
-  background: #002140;
-  border-bottom: 1px solid #003a70;
+  background: #2a2a2a;
+  border-bottom: 1px solid #3a3a3a;
 }
 
 .app-header {
@@ -100,16 +100,16 @@
 }
 
 [data-theme="dark"] .app-sider {
-  background: #001529 !important;
+  background: #1A1A1A !important;
 }
 
 [data-theme="dark"] .app-sider.dark-sider {
-  background: #001529 !important;
+  background: #1A1A1A !important;
 }
 
 [data-theme="dark"] .app-sider .logo {
-  background: #002140;
-  border-bottom-color: #003a70;
+  background: #2a2a2a;
+  border-bottom-color: #3a3a3a;
 }
 
 [data-theme="dark"] .ant-menu {

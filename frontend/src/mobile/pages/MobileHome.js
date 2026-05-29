@@ -36,9 +36,11 @@ const MobileHome = () => {
   const [votes, setVotes] = useState([]);
   const [topicList, setTopicList] = useState([]);
   const [rateStats, setRateStats] = useState([]); // [{item_key, item_name, category_name, avg, count}]
+  const [loading, setLoading] = useState(true);
 
   // 加载物业评价配置+统计
   useEffect(() => {
+    setLoading(true);
     const year = new Date().getFullYear();
     Promise.all([
       propertyRatingApi.categories({ year }),
@@ -65,7 +67,8 @@ const MobileHome = () => {
       })
       .catch(() => {
         setRateStats(RATING_KEYS_FALLBACK.map(k => ({ ...k, avg: k.key === 'repair' ? 4.2 : (k.key === 'service' ? 4.8 : 4.9), count: 0 })));
-      });
+      })
+      .finally(() => setLoading(false));
   }, []);
 
   // 加载焦点议题
@@ -117,6 +120,20 @@ const MobileHome = () => {
     if (diff < 86400000) return `截止 ${d.getHours()}:${String(d.getMinutes()).padStart(2, '0')}`;
     return `截止 ${d.getMonth() + 1}/${d.getDate()} ${d.getHours()}:${String(d.getMinutes()).padStart(2, '0')}`;
   };
+
+  if (loading) {
+    return (
+      <div className="yishi-home">
+        <div className="yishi-header">
+          <div className="header-left">
+            <div className="header-title">议事</div>
+            <div className="header-slogan">AI赋能 · 区块链构建可信业主自治平台</div>
+          </div>
+        </div>
+        <div className="empty-hint">加载中...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="yishi-home">

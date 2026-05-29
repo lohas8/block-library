@@ -1,0 +1,26 @@
+/* Dashboard 页面样式 */
+
+.dashboard-page {
+  padding: 24px;
+}
+
+.dashboard-section-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-top: 24px;
+  margin-bottom: 12px;
+}
+
+/* 颜色常量（供 valueStyle 使用） */
+.color-success { color: #52c41a; }
+.color-warning { color: #fa8c16; }
+.color-error { color: #ff4d4f; }
+.color-info { color: #1890ff; }
+.color-purple { color: #722ed1; }
+
+.dashboard-loading {
+  padding: 24px;
+  text-align: center;
+  color: #999;
+}
