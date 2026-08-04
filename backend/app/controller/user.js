@@ -1,7 +1,7 @@
 /* eslint-disable */
-const Controller = require('egg').Controller;
+const { BaseController } = require('../core/base_controller');
 
-class UserController extends Controller {
+class UserController extends BaseController {
   // 用户注册
   async register() {
     const { ctx } = this;

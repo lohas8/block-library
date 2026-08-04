@@ -1,9 +1,9 @@
 /**
  * RatingResultController - 物业评价结果（业主操作）
  */
-const Controller = require('../core/base_controller');
+const { BaseController } = require('../core/base_controller');
 
-class RatingResultController extends Controller {
+class RatingResultController extends BaseController {
   // 评分统计（卡片展示用）
   async stats() {
     const { ctx } = this;

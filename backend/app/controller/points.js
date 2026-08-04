@@ -1,7 +1,7 @@
 /* eslint-disable */
-const Controller = require('egg').Controller;
+const { BaseController } = require('../core/base_controller');
 
-class PointsController extends Controller {
+class PointsController extends BaseController {
   // 获取积分兑换物品列表
   async itemList() {
     const { ctx } = this;

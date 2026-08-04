@@ -1,9 +1,9 @@
 /**
  * PropertyRatingController - 物业评价
  */
-const Controller = require('../core/base_controller');
+const { BaseController } = require('../core/base_controller');
 
-class PropertyRatingController extends Controller {
+class PropertyRatingController extends BaseController {
   // 评分统计
   async stats() {
     const { ctx } = this;

@@ -1,7 +1,7 @@
 /* eslint-disable */
-const Controller = require('egg').Controller;
+const { BaseController } = require('../core/base_controller');
 
-class NotificationController extends Controller {
+class NotificationController extends BaseController {
   // 获取用户通知列表
   async list() {
     const { ctx } = this;

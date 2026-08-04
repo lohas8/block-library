@@ -1,7 +1,7 @@
 /* eslint-disable */
-const Controller = require('egg').Controller;
+const { BaseController } = require('../core/base_controller');
 
-class BookController extends Controller {
+class BookController extends BaseController {
   // 获取图书列表
   async list() {
     const { ctx } = this;

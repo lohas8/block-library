@@ -1,9 +1,9 @@
 /**
  * RatingCategoryController - 评价配置管理（管理员）
  */
-const Controller = require('../core/base_controller');
+const { BaseController } = require('../core/base_controller');
 
-class RatingCategoryController extends Controller {
+class RatingCategoryController extends BaseController {
   // 评价配置列表
   async list() {
     const { ctx } = this;

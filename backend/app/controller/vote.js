@@ -1,9 +1,9 @@
 /**
  * VoteController - 投票 Controller
  */
-const Controller = require('../core/base_controller');
+const { BaseController } = require('../core/base_controller');
 
-class VoteController extends Controller {
+class VoteController extends BaseController {
   // 投票列表
   async list() {
     const { ctx } = this;

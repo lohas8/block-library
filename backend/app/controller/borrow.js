@@ -1,7 +1,7 @@
 /* eslint-disable */
-const Controller = require('egg').Controller;
+const { BaseController } = require('../core/base_controller');
 
-class BorrowController extends Controller {
+class BorrowController extends BaseController {
   // 借阅图书
   async borrow() {
     const { ctx } = this;
