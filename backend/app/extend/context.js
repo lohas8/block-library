@@ -1,9 +1,8 @@
 /**
  * Context 扩展
  * 为 ctx 添加 success/fail 快捷方法
+ * 注意：使用普通函数而非箭头函数，确保 this 绑定到 Koa Context
  */
-const { BaseController } = require('../core/base_controller');
-
 module.exports = {
   success(data, msg = 'success') {
     this.body = {

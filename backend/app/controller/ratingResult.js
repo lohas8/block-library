@@ -13,9 +13,9 @@ class RatingResultController extends BaseController {
         community_id,
         year ? parseInt(year) : null,
       );
-      ctx.success(result);
+      this.success(result);
     } catch (e) {
-      ctx.fail(e.message);
+      this.fail(e.message);
     }
   }
 
@@ -23,12 +23,12 @@ class RatingResultController extends BaseController {
   async submit() {
     const { ctx } = this;
     const userId = ctx.state.user?.id;
-    if (!userId) return ctx.fail('请先登录');
+    if (!userId) return this.fail('请先登录');
     try {
       const result = await ctx.service.ratingResult.submit(ctx.request.body, userId);
-      ctx.success(result, '评价提交成功');
+      this.success(result, '评价提交成功');
     } catch (e) {
-      ctx.fail(e.message);
+      this.fail(e.message);
     }
   }
 
@@ -36,14 +36,14 @@ class RatingResultController extends BaseController {
   async check() {
     const { ctx } = this;
     const userId = ctx.state.user?.id;
-    if (!userId) return ctx.fail('请先登录');
+    if (!userId) return this.fail('请先登录');
     const { community_id, year } = ctx.query;
     const hasSubmitted = await ctx.service.ratingResult.hasSubmitted(
       community_id,
       userId,
       year ? parseInt(year) : null,
     );
-    ctx.success({ has_submitted: hasSubmitted });
+    this.success({ has_submitted: hasSubmitted });
   }
 }
 

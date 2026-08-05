@@ -13,82 +13,142 @@ class PointsController extends BaseController {
       .limit(parseInt(pageSize))
       .sort({ points: 1 });
 
-    ctx.success({ list, total, page: parseInt(page), pageSize: parseInt(pageSize) });
+    this.success({ list, total, page: parseInt(page), pageSize: parseInt(pageSize) });
   }
 
-  // 添加积分兑换物品
+  // 添加积分兑换物品（仅管理员）
   async createItem() {
-    const { ctx } = this;
-    const data = ctx.request.body;
+    try {
+      this.requireAdmin();
+      const { ctx } = this;
+      const data = ctx.request.body;
 
-    const item = await ctx.model.PointsItem.create(data);
-    ctx.success(item, '添加成功');
+      if (!data.name || data.points === undefined) {
+        return this.fail('物品名称和积分必填', -1, 400);
+      }
+
+      const item = await ctx.model.PointsItem.create(data);
+      this.success(item, '添加成功');
+    } catch (e) {
+      if (e.name === 'ForbiddenError' || (e.message && e.message.includes('无权限'))) {
+        this.fail(e.message, -1, 403);
+      } else {
+        this.fail(e.message);
+      }
+    }
   }
 
-  // 更新积分兑换物品
+  // 更新积分兑换物品（仅管理员）
   async updateItem() {
-    const { ctx } = this;
-    const { id } = ctx.params;
-    const data = ctx.request.body;
+    try {
+      this.requireAdmin();
+      const { ctx } = this;
+      const { id } = ctx.params;
+      const data = ctx.request.body;
 
-    const item = await ctx.model.PointsItem.findByIdAndUpdate(id, data, { new: true });
-    if (!item) {
-      return ctx.fail('物品不存在');
+      if (data.points !== undefined && data.points < 0) {
+        return this.fail('积分不能为负数', -1, 400);
+      }
+
+      const item = await ctx.model.PointsItem.findByIdAndUpdate(id, data, { new: true });
+      if (!item) {
+        return this.fail('物品不存在', -1, 404);
+      }
+
+      this.success(item, '更新成功');
+    } catch (e) {
+      if (e.name === 'ForbiddenError' || (e.message && e.message.includes('无权限'))) {
+        this.fail(e.message, -1, 403);
+      } else {
+        this.fail(e.message);
+      }
     }
-
-    ctx.success(item, '更新成功');
   }
 
-  // 删除积分兑换物品
+  // 删除积分兑换物品（仅管理员）
   async deleteItem() {
-    const { ctx } = this;
-    const { id } = ctx.params;
+    try {
+      this.requireAdmin();
+      const { ctx } = this;
+      const { id } = ctx.params;
 
-    await ctx.model.PointsItem.findByIdAndDelete(id);
-    ctx.success(null, '删除成功');
+      const item = await ctx.model.PointsItem.findByIdAndDelete(id);
+      if (!item) {
+        return this.fail('物品不存在', -1, 404);
+      }
+      this.success(null, '删除成功');
+    } catch (e) {
+      if (e.name === 'ForbiddenError' || (e.message && e.message.includes('无权限'))) {
+        this.fail(e.message, -1, 403);
+      } else {
+        this.fail(e.message);
+      }
+    }
   }
 
-  // 兑换物品
+  // 兑换物品（需登录）
   async exchange() {
-    const { ctx } = this;
-    const { userId, itemId } = ctx.request.body;
+    try {
+      this.requireAuth();
+      const { ctx } = this;
+      const { userId, itemId, quantity = 1 } = ctx.request.body;
 
-    // 检查物品是否存在
-    const item = await ctx.model.PointsItem.findById(itemId);
-    if (!item) {
-      return ctx.fail('物品不存在');
-    }
+      if (quantity <= 0) {
+        return this.fail('兑换数量必须大于0', -1, 400);
+      }
 
-    // 检查库存
-    if (item.stock === 0) {
-      return ctx.fail('物品已兑完');
-    }
+      // 检查 itemId 是否有效 ObjectId
+      if (!ctx.model.PointsItem.schema.path('_id').cast(itemId)) {
+        return this.fail('物品不存在', -1, 404);
+      }
 
-    // 检查用户积分
-    const user = await ctx.model.User.findById(userId);
-    if (user.points < item.points) {
-      return ctx.fail('积分不足');
-    }
+      // 检查物品是否存在
+      const item = await ctx.model.PointsItem.findById(itemId);
+      if (!item) {
+        return this.fail('物品不存在', -1, 404);
+      }
 
-    // 扣除积分
-    user.points -= item.points;
-    await user.save();
+      // 检查库存
+      if (item.stock < quantity) {
+        return this.fail('物品库存不足', -1, 400);
+      }
 
-    // 减少库存
-    if (item.stock > 0) {
-      item.stock -= 1;
+      // 检查用户积分
+      const user = await ctx.model.User.findById(userId);
+      if (!user) {
+        return this.fail('用户不存在', -1, 404);
+      }
+      const totalPoints = item.points * quantity;
+      if (user.points < totalPoints) {
+        return this.fail('积分不足', -1, 400);
+      }
+
+      // 扣除积分
+      user.points -= totalPoints;
+      await user.save();
+
+      // 减少库存
+      item.stock -= quantity;
       await item.save();
+
+      // 发送站内通知
+      await ctx.model.Notification.create({
+        userId,
+        title: '兑换成功',
+        content: `您已成功兑换「${item.name}」，请到管理员处领取`,
+        type: 'exchange_success',
+      });
+
+      this.success({ remainingPoints: user.points }, '兑换成功');
+    } catch (e) {
+      if (e.name === 'UnauthorizedError') {
+        this.fail(e.message, -1, 401);
+      } else if (e.name === 'CastError' || (e.message && e.message.includes('Cast to ObjectId'))) {
+        this.fail('物品不存在', -1, 404);
+      } else {
+        this.fail(e.message);
+      }
     }
-
-    // 发送站内通知
-    await ctx.model.Notification.create({
-      userId,
-      title: '兑换成功',
-      content: `您已成功兑换「${item.name}」，请到管理员处领取`,
-      type: 'success',
-    });
-
-    ctx.success({ remainingPoints: user.points }, '兑换成功');
   }
 }
 

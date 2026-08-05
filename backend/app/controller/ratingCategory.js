@@ -10,9 +10,9 @@ class RatingCategoryController extends BaseController {
     const { community_id } = ctx.query;
     try {
       const list = await ctx.service.ratingCategory.getList(community_id);
-      ctx.success(list);
+      this.success(list);
     } catch (e) {
-      ctx.fail(e.message);
+      this.fail(e.message);
     }
   }
 
@@ -22,13 +22,13 @@ class RatingCategoryController extends BaseController {
     // 管理员权限校验（简化：检查 role 为 admin 或 super_admin）
     const user = ctx.state.user || {};
     if (!['admin', 'super_admin'].includes(user.role)) {
-      return ctx.fail('无权限操作');
+      return this.fail('无权限操作');
     }
     try {
       const result = await ctx.service.ratingCategory.create(ctx.request.body);
-      ctx.success(result, '创建成功');
+      this.success(result, '创建成功');
     } catch (e) {
-      ctx.fail(e.message);
+      this.fail(e.message);
     }
   }
 
@@ -38,13 +38,13 @@ class RatingCategoryController extends BaseController {
     const { id } = ctx.params;
     const user = ctx.state.user || {};
     if (!['admin', 'super_admin'].includes(user.role)) {
-      return ctx.fail('无权限操作');
+      return this.fail('无权限操作');
     }
     try {
       const result = await ctx.service.ratingCategory.update(id, ctx.request.body);
-      ctx.success(result, '更新成功');
+      this.success(result, '更新成功');
     } catch (e) {
-      ctx.fail(e.message);
+      this.fail(e.message);
     }
   }
 
@@ -54,13 +54,13 @@ class RatingCategoryController extends BaseController {
     const { id } = ctx.params;
     const user = ctx.state.user || {};
     if (!['admin', 'super_admin'].includes(user.role)) {
-      return ctx.fail('无权限操作');
+      return this.fail('无权限操作');
     }
     try {
       await ctx.service.ratingCategory.delete(id);
-      ctx.success(null, '删除成功');
+      this.success(null, '删除成功');
     } catch (e) {
-      ctx.fail(e.message);
+      this.fail(e.message);
     }
   }
 }

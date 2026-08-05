@@ -2,12 +2,14 @@
 const { BaseController } = require('../core/base_controller');
 
 class NotificationController extends BaseController {
-  // 获取用户通知列表
+  // 获取用户通知列表（需登录）
   async list() {
+    this.requireAuth();
     const { ctx } = this;
-    const { userId, page = 1, pageSize = 10, unread } = ctx.query;
+    const { page = 1, pageSize = 10, unread } = ctx.query;
+    const operator = ctx.state.user;
 
-    const query = { userId };
+    const query = { userId: operator.id };
     if (unread === 'true') {
       query.read = false;
     }
@@ -19,11 +21,11 @@ class NotificationController extends BaseController {
       .sort({ createdAt: -1 });
 
     const unreadCount = await ctx.model.Notification.countDocuments({
-      userId,
+      userId: operator.id,
       read: false,
     });
 
-    ctx.success({
+    this.success({
       list,
       total,
       unreadCount,
@@ -32,50 +34,52 @@ class NotificationController extends BaseController {
     });
   }
 
-  // 标记已读
+  // 标记单条已读（需登录）
   async markRead() {
+    this.requireAuth();
     const { ctx } = this;
     const { id } = ctx.params;
 
     await ctx.model.Notification.findByIdAndUpdate(id, { read: true });
-    ctx.success(null, '标记成功');
+    this.success(null, '标记成功');
   }
 
-  // 全部标记已读
+  // 全部标记已读（需登录）
   async markAllRead() {
+    this.requireAuth();
     const { ctx } = this;
     const { userId } = ctx.request.body;
+    const operator = ctx.state.user;
 
     await ctx.model.Notification.updateMany(
-      { userId, read: false },
+      { userId: operator.id, read: false },
       { read: true }
     );
-    ctx.success(null, '全部标记已读');
+    this.success(null, '全部标记已读');
   }
 
-  // 删除通知
+  // 删除通知（需登录）
   async delete() {
+    this.requireAuth();
     const { ctx } = this;
     const { id } = ctx.params;
 
     await ctx.model.Notification.findByIdAndDelete(id);
-    ctx.success(null, '删除成功');
+    this.success(null, '删除成功');
   }
 
-  // 创建通知（管理员发送全员通知）
+  // 创建通知（需登录）
   async create() {
+    this.requireAuth();
     const { ctx } = this;
     const { title, content, type, userId } = ctx.request.body;
 
     if (userId) {
-      // 发送给指定用户
-      await ctx.model.Notification.create({ userId, title, content, type });
+      const notif = await ctx.model.Notification.create({ userId, title, content, type });
+      this.success(notif, '发送成功');
     } else {
-      // 发送给所有用户（暂不实现）
-      return ctx.fail('暂不支持群发');
+      return this.fail('暂不支持群发');
     }
-
-    ctx.success(null, '发送成功');
   }
 }
 

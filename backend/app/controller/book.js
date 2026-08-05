@@ -9,9 +9,9 @@ class BookController extends BaseController {
 
     try {
       const result = await ctx.service.book.getList({ page, pageSize, keyword, category });
-      ctx.success(result);
+      this.success(result);
     } catch (e) {
-      ctx.fail(e.message);
+      this.fail(e.message);
     }
   }
 
@@ -22,22 +22,27 @@ class BookController extends BaseController {
 
     try {
       const book = await ctx.service.book.getDetail(id);
-      ctx.success(book);
+      this.success(book);
     } catch (e) {
-      ctx.fail(e.message);
+      this.fail(e.message);
     }
   }
 
   // 添加图书
   async create() {
+    this.requireAuth();
     const { ctx } = this;
     const data = ctx.request.body;
 
+    if (!data.title) {
+      return this.fail('图书标题必填', -1, 400);
+    }
+
     try {
       const book = await ctx.service.book.create(data);
-      ctx.success(book, '图书添加成功');
+      this.success(book, '图书添加成功');
     } catch (e) {
-      ctx.fail(e.message);
+      this.fail(e.message);
     }
   }
 
@@ -49,9 +54,9 @@ class BookController extends BaseController {
 
     try {
       const book = await ctx.service.book.update(id, data);
-      ctx.success(book, '图书更新成功');
+      this.success(book, '图书更新成功');
     } catch (e) {
-      ctx.fail(e.message);
+      this.fail(e.message);
     }
   }
 
@@ -62,9 +67,9 @@ class BookController extends BaseController {
 
     try {
       await ctx.service.book.delete(id);
-      ctx.success(null, '图书删除成功');
+      this.success(null, '图书删除成功');
     } catch (e) {
-      ctx.fail(e.message);
+      this.fail(e.message);
     }
   }
 
@@ -74,9 +79,9 @@ class BookController extends BaseController {
 
     try {
       const categories = await ctx.service.book.getCategories();
-      ctx.success(categories);
+      this.success(categories);
     } catch (e) {
-      ctx.fail(e.message);
+      this.fail(e.message);
     }
   }
 
@@ -87,9 +92,9 @@ class BookController extends BaseController {
 
     try {
       const results = await ctx.service.book.importBooks(books);
-      ctx.success(results, `成功导入 ${results.length} 本图书`);
+      this.success(results, `成功导入 ${results.length} 本图书`);
     } catch (e) {
-      ctx.fail(e.message);
+      this.fail(e.message);
     }
   }
 
@@ -99,9 +104,9 @@ class BookController extends BaseController {
 
     try {
       const books = await ctx.service.book.exportAll();
-      ctx.success(books);
+      this.success(books);
     } catch (e) {
-      ctx.fail(e.message);
+      this.fail(e.message);
     }
   }
 }

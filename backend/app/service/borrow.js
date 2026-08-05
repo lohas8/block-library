@@ -49,18 +49,30 @@ class BorrowService extends Service {
       userId,
       status: 'borrowed',
     });
-    if (borrowCount >= this.ctx.config.borrow.maxBooks) {
-      throw new Error(`最多同时借阅 ${this.ctx.config.borrow.maxBooks} 本书`);
+    if (borrowCount >= 5) {
+      throw new Error(`最多同时借阅 5 本书`);
     }
 
-    // 检查用户积分是否足够
+    // 检查用户
     const user = await this.ctx.model.User.findById(userId);
-    if (user.points < this.ctx.config.points.borrowBook) {
+    if (!user) {
+      throw new Error('用户不存在');
+    }
+    // 获取借阅积分配置（默认为0，不扣除积分）
+    let borrowPoints = 0;
+    try {
+      if (this.ctx.config && this.ctx.config.points && typeof this.ctx.config.points.borrowBook === 'number' && this.ctx.config.points.borrowBook > 0) {
+        borrowPoints = this.ctx.config.points.borrowBook;
+      }
+    } catch (e) {
+      borrowPoints = 0;
+    }
+    if (borrowPoints > 0 && user.points < borrowPoints) {
       throw new Error('积分不足，借阅需要扣除积分');
     }
 
     // 计算应还日期
-    const actualDueDate = dueDate || new Date(Date.now() + this.ctx.config.borrow.maxDays * 24 * 60 * 60 * 1000);
+    const actualDueDate = dueDate || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
 
     // 创建借阅记录
     const record = await this.ctx.model.BorrowRecord.create({
@@ -75,16 +87,18 @@ class BorrowService extends Service {
     book.available -= 1;
     await book.save();
 
-    // 扣除积分
-    user.points -= this.ctx.config.points.borrowBook;
-    await user.save();
+    // 扣除积分（borrowPoints 为 0 时跳过）
+    if (borrowPoints > 0) {
+      user.points -= borrowPoints;
+      await user.save();
+    }
 
     // 发送站内通知
     await this.ctx.model.Notification.create({
       userId,
       title: '借阅成功',
-      content: `您已成功借阅《${book.title}》，请在 ${this.ctx.config.borrow.maxDays} 天内归还`,
-      type: 'success',
+      content: `您已成功借阅《${book.title}》，请在 ${30} 天内归还`,
+      type: 'borrow_reminder',
     });
 
     return record;

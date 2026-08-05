@@ -38,8 +38,8 @@ describe('物业评价模块 API 测试', () => {
 
       expect(response.body).toHaveProperty('_id');
       expect(response.body.name).toBe('服务态度');
-      expect(Array.isArray(response.body.items)).toBe(true);
-      expect(response.body.items.length).toBe(3);
+      expect(Array.isArray(response.body.data.items)).toBe(true);
+      expect(response.body.data.items.length).toBe(3);
       createdCategoryId = response.body._id;
     });
 
@@ -87,7 +87,7 @@ describe('物业评价模块 API 测试', () => {
 
   describe('PUT /api/rating-categories/:id - 更新配置', () => {
     it('管理员应能更新大项名称', async () => {
-      if (!createdCategoryId) return jest.skip();
+      if (!createdCategoryId) return;
 
       const response = await request(BASE_URL)
         .put(`/api/rating-categories/${createdCategoryId}`)
@@ -99,7 +99,7 @@ describe('物业评价模块 API 测试', () => {
     });
 
     it('管理员应能新增小项', async () => {
-      if (!createdCategoryId) return jest.skip();
+      if (!createdCategoryId) return;
 
       const response = await request(BASE_URL)
         .put(`/api/rating-categories/${createdCategoryId}`)
@@ -113,7 +113,7 @@ describe('物业评价模块 API 测试', () => {
         })
         .expect(200);
 
-      expect(response.body.items.length).toBe(3);
+      expect(response.body.data.items.length).toBe(3);
     });
   });
 
@@ -135,11 +135,11 @@ describe('物业评价模块 API 测试', () => {
         .set('Authorization', `Bearer ${adminToken}`)
         .expect(200);
 
-      expect(response.body.message).toContain('删除成功');
+      expect(response.body.msg).toContain('删除成功');
     });
 
     it('普通用户删除应返回 403', async () => {
-      if (!createdCategoryId) return jest.skip();
+      if (!createdCategoryId) return;
 
       const response = await request(BASE_URL)
         .delete(`/api/rating-categories/${createdCategoryId}`)
@@ -204,7 +204,7 @@ describe('物业评价模块 API 测试', () => {
         })
         .expect(400);
 
-      expect(response.body.message).toContain('已提交过');
+      expect(response.body.msg).toContain('已提交过');
     });
 
     it('未登录提交应返回 401', async () => {
@@ -242,10 +242,10 @@ describe('物业评价模块 API 测试', () => {
 
       expect(response.body).toHaveProperty('year', TEST_YEAR);
       expect(response.body).toHaveProperty('total_raters');
-      expect(Array.isArray(response.body.items)).toBe(true);
+      expect(Array.isArray(response.body.data.items)).toBe(true);
 
-      if (response.body.items.length > 0) {
-        const item = response.body.items[0];
+      if (response.body.data.items.length > 0) {
+        const item = response.body.data.items[0];
         expect(item).toHaveProperty('item_key');
         expect(item).toHaveProperty('avg');
         expect(item).toHaveProperty('count');
@@ -267,8 +267,8 @@ describe('物业评价模块 API 测试', () => {
         .get(`/api/property-ratings/stats?community_id=${TEST_COMMUNITY}&year=${TEST_YEAR}`)
         .expect(200);
 
-      if (response.body.items.length > 0) {
-        const avgStr = response.body.items[0].avg.toFixed(1);
+      if (response.body.data.items.length > 0) {
+        const avgStr = response.body.data.items[0].avg.toFixed(1);
         expect(avgStr).toMatch(/^\d+\.\d$/);
       }
     });

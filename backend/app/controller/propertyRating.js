@@ -10,9 +10,9 @@ class PropertyRatingController extends BaseController {
     const { community_id, year } = ctx.query;
     try {
       const result = await ctx.service.propertyRating.getStats(community_id, year ? parseInt(year) : null);
-      ctx.success(result);
+      this.success(result);
     } catch (e) {
-      ctx.fail(e.message);
+      this.fail(e.message);
     }
   }
 
@@ -20,12 +20,12 @@ class PropertyRatingController extends BaseController {
   async create() {
     const { ctx } = this;
     const userId = ctx.state.user?.id;
-    if (!userId) return ctx.fail('请先登录');
+    if (!userId) return this.fail('请先登录');
     try {
       const result = await ctx.service.propertyRating.create(ctx.request.body, userId);
-      ctx.success(result, '评价成功');
+      this.success(result, '评价成功');
     } catch (e) {
-      ctx.fail(e.message);
+      this.fail(e.message);
     }
   }
 }
