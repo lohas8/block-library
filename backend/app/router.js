@@ -105,4 +105,33 @@ module.exports = app => {
   router.post('/api/rating-categories', controller.ratingCategory.create);
   router.put('/api/rating-categories/:id', validateObjectId());
   router.delete('/api/rating-categories/:id', validateObjectId());
+
+  // 工具共享模块
+  router.get('/api/tools', controller.tool.list);
+  router.get('/api/tools/categories', controller.tool.categories);
+  router.get('/api/tools/statistics', controller.tool.statistics);
+  router.get('/api/tools/:id', validateObjectId());
+  router.post('/api/tools', controller.tool.create);
+  router.put('/api/tools/:id', validateObjectId());
+  router.delete('/api/tools/:id', validateObjectId());
+  router.post('/api/tools/rent', controller.tool.rent);
+  router.post('/api/tools/return/:id', validateObjectId());
+
+  // 小区管理模块
+  router.get('/api/communities', controller.community.list);
+  router.get('/api/communities/:id', validateObjectId());
+  router.post('/api/communities', controller.community.create);
+  router.put('/api/communities/:id', validateObjectId());
+  router.delete('/api/communities/:id', validateObjectId());
+
+  // 规则管理模块
+  router.get('/api/rules', controller.rule.list);
+  router.get('/api/rules/approvals', controller.rule.listApprovals);
+  router.get('/api/rules/:id', validateObjectId());
+  router.post('/api/rules', controller.rule.create);
+  router.put('/api/rules/:id', validateObjectId());
+  router.delete('/api/rules/:id', validateObjectId());
+  router.post('/api/rules/:id/apply', controller.rule.apply);
+  router.post('/api/rules/approvals/:id/approve', controller.rule.approve);
+  router.post('/api/rules/approvals/:id/reject', controller.rule.reject);
 };
