@@ -29,6 +29,8 @@ import MobileVoteDetail from './mobile/pages/MobileVoteDetail';
 import MobileBookList from './mobile/pages/MobileBookList';
 import MobileMyBorrows from './mobile/pages/MobileMyBorrows';
 import MobileProfile from './mobile/pages/MobileProfile';
+import MobileSquare from './mobile/pages/MobileSquare';
+import MobilePublish from './mobile/pages/MobilePublish';
 import MobileScanBorrow from './mobile/pages/MobileScanBorrow';
 import MobileToolShare from './mobile/pages/MobileToolShare';
 import MobileRuleApply from './mobile/pages/MobileRuleApply';
@@ -115,7 +117,8 @@ function App() {
             <Route path="votes/:id" element={<MobileVoteDetail />} />
             <Route path="garden" element={<MobileProfile />} />
             <Route path="ai" element={<MobileProfile />} />
-            <Route path="square" element={<MobileProfile />} />
+            <Route path="square" element={<MobileSquare />} />
+            <Route path="publish" element={<MobilePublish />} />
             <Route path="profile" element={<MobileProfile />} />
             <Route path="books" element={<MobileBookList />} />
             <Route path="my-borrows" element={<MobileMyBorrows />} />

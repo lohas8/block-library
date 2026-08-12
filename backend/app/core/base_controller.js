@@ -37,13 +37,14 @@ class BaseController extends Controller {
    * @param {string} msg 错误信息
    * @param {number} code 错误码（默认 -1）
    */
-  fail(msg, code = -1) {
+  fail(msg, code = -1, httpStatus = 200) {
+    const finalCode = httpStatus >= 400 && code === -1 ? httpStatus : code;
     this.ctx.body = {
-      code,
+      code: finalCode,
       msg,
       data: null,
     };
-    this.ctx.status = 200;
+    this.ctx.status = httpStatus;
   }
 
   /**

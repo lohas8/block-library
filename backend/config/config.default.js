@@ -1,10 +1,9 @@
 /* eslint-disable */
 module.exports = {
   keys: 'library-backend-secret-key-2026',
+  middleware: ['auth'],
   mongoose: {
-    client: {
-      url: 'mongodb://localhost:27017/library',
-    },
+    url: 'mongodb://localhost:27017/library',
   },
   cors: {
     origin: '*',

@@ -11,7 +11,7 @@ describe('用户接口测试', () => {
   let authToken;
   let testUserId;
   const testUser = {
-    username: 'testuser',
+    username: 'testuser_' + Date.now(),
     password: '123456',
     phone: '13800138000',
     name: '测试用户'
@@ -22,11 +22,11 @@ describe('用户接口测试', () => {
       const response = await request(BASE_URL)
         .post('/api/users/register')
         .send(testUser)
-        .expect(201);
+        .expect(200);
       
-      expect(response.body).toHaveProperty('token');
-      authToken = response.body.token;
-      testUserId = response.body.user.id;
+      expect(response.body.data).toHaveProperty('token');
+      authToken = response.body.data.token;
+      testUserId = response.body.data.id;
     });
 
     it('用户名重复应返回错误', async () => {
@@ -35,7 +35,7 @@ describe('用户接口测试', () => {
         .send(testUser)
         .expect(400);
       
-      expect(response.body.message).toContain('用户名已存在');
+      expect(response.body.msg).toContain('用户名已存在');
     });
 
     it('缺少必填字段应返回错误', async () => {
@@ -56,7 +56,7 @@ describe('用户接口测试', () => {
         })
         .expect(200);
       
-      expect(response.body).toHaveProperty('token');
+      expect(response.body.data).toHaveProperty('token');
     });
 
     it('密码错误应返回错误', async () => {
@@ -87,7 +87,7 @@ describe('用户接口测试', () => {
         .set('Authorization', `Bearer ${authToken}`)
         .expect(200);
       
-      expect(Array.isArray(response.body.list)).toBe(true);
+      expect(Array.isArray(response.body.data.list)).toBe(true);
     });
 
     it('未授权应返回401', async () => {
@@ -123,7 +123,7 @@ describe('用户接口测试', () => {
         .send({ name: '新名字' })
         .expect(200);
       
-      expect(response.body.name).toBe('新名字');
+      expect(response.body.data.name).toBe('新名字');
     });
 
     it('无权限更新其他用户应返回403', async () => {
@@ -143,7 +143,7 @@ describe('用户接口测试', () => {
         .send({ points: 10, type: 'add', reason: '测试增加' })
         .expect(200);
       
-      expect(response.body.points).toBeGreaterThanOrEqual(10);
+      expect(response.body.data.points).toBeGreaterThanOrEqual(10);
     });
 
     it('积分不足应返回错误', async () => {
@@ -171,7 +171,7 @@ describe('用户接口测试', () => {
         .set('Authorization', `Bearer ${authToken}`)
         .expect(200);
       
-      expect(response.body).toHaveProperty('pagination');
+      expect(response.body).toHaveProperty('page'); expect(response.body).toHaveProperty('pageSize');
     });
   });
 });

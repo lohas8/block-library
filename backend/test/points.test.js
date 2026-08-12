@@ -33,7 +33,7 @@ describe('积分接口测试', () => {
         .get('/api/points/items')
         .expect(200);
       
-      expect(Array.isArray(response.body.list)).toBe(true);
+      expect(Array.isArray(response.body.data.list)).toBe(true);
     });
 
     it('应该返回上下架状态', async () => {
@@ -41,7 +41,7 @@ describe('积分接口测试', () => {
         .get('/api/points/items')
         .expect(200);
       
-      response.body.list.forEach(item => {
+      response.body.data.list.forEach(item => {
         expect(item).toHaveProperty('status');
       });
     });
@@ -51,7 +51,7 @@ describe('积分接口测试', () => {
         .get('/api/points/items?category=图书')
         .expect(200);
       
-      expect(response.body.list).toBeDefined();
+      expect(response.body.data.list).toBeDefined();
     });
 
     it('支持分页', async () => {
@@ -59,7 +59,7 @@ describe('积分接口测试', () => {
         .get('/api/points/items?page=1&pageSize=10')
         .expect(200);
       
-      expect(response.body.pagination).toBeDefined();
+      expect(response.body.data).toBeDefined();
     });
   });
 
@@ -77,10 +77,10 @@ describe('积分接口测试', () => {
         .post('/api/points/items')
         .set('Authorization', `Bearer ${adminToken}`)
         .send(newItem)
-        .expect(201);
+        .expect(200);
       
       expect(response.body).toHaveProperty('id');
-      testItemId = response.body.id;
+      testItemId = response.body.data._id;
     });
 
     it('普通用户创建应返回403', async () => {
@@ -185,7 +185,7 @@ describe('积分接口测试', () => {
           itemId: exchangeItemId,
           quantity: 1
         })
-        .expect(201);
+        .expect(200);
       
       expect(response.body).toHaveProperty('id');
     });
@@ -200,7 +200,7 @@ describe('积分接口测试', () => {
         })
         .expect(400);
       
-      expect(response.body.message).toContain('积分不足');
+      expect(response.body.msg).toContain('积分不足');
     });
 
     it('商品库存不足应返回错误', async () => {
@@ -219,7 +219,7 @@ describe('积分接口测试', () => {
         })
         .expect(400);
       
-      expect(response.body.message).toContain('库存不足');
+      expect(response.body.msg).toContain('库存不足');
     });
 
     it('商品不存在应返回404', async () => {

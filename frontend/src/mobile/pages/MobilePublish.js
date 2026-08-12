@@ -199,11 +199,12 @@ const ArticleForm = ({ data, onChange }) => {
           columns={[CATEGORY_OPTIONS]}
           value={categoryValue}
           onChange={val => { setCategoryValue(val); update('category', val[0]); }}
-        >
-          <Button className="picker-btn">
-            { CATEGORY_OPTIONS.find(c => c.value === data.category)?.label || '请选择分类' }
-          </Button>
-        </Picker>
+          renderButton={(_, {text}) => (
+            <Button className="picker-btn">
+              {text || CATEGORY_OPTIONS.find(c => c.value === data.category)?.label || '请选择分类'}
+            </Button>
+          )}
+        />
       </div>
 
       {/* 位置 */}

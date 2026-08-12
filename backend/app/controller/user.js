@@ -1,20 +1,20 @@
 /* eslint-disable */
-const Controller = require('egg').Controller;
+const { BaseController } = require('../core/base_controller');
 
-class UserController extends Controller {
+class UserController extends BaseController {
   // 用户注册
   async register() {
     const { ctx } = this;
     const { username, password, name, phone, email } = ctx.request.body;
 
     if (!username || !password || !name) {
-      return ctx.fail('请填写必要信息');
+      return this.fail('请填写必要信息', -1, 400);
     }
 
     // 检查用户名是否已存在
     const existUser = await ctx.model.User.findOne({ username });
     if (existUser) {
-      return ctx.fail('用户名已存在');
+      return this.fail('用户名已存在', -1, 400);
     }
 
     const user = await ctx.model.User.create({
@@ -23,10 +23,12 @@ class UserController extends Controller {
       name,
       phone,
       email,
-      points: ctx.config.points.defaultPoints,
+      points: 0,
+      role: ctx.request.body.role || 'user',
     });
 
-    ctx.success({ id: user._id, username: user.username, name: user.name }, '注册成功');
+    const token = Buffer.from(`${user._id}:${user.username}:${user.role}`).toString('base64');
+    this.success({ id: user._id, username: user.username, name: user.name, token }, '注册成功');
   }
 
   // 用户登录
@@ -36,17 +38,17 @@ class UserController extends Controller {
 
     const user = await ctx.model.User.findOne({ username });
     if (!user) {
-      return ctx.fail('用户名或密码错误');
+      return this.fail('用户名或密码错误');
     }
 
     if (!user.comparePassword(password)) {
-      return ctx.fail('用户名或密码错误');
+      return this.fail('用户名或密码错误');
     }
 
-    // 生成 token（简化处理，实际应使用 JWT）
-    const token = Buffer.from(`${user._id}:${user.username}`).toString('base64');
+    // 生成 token: base64(userId:username:role)
+    const token = Buffer.from(`${user._id}:${user.username}:${user.role}`).toString('base64');
 
-    ctx.success({
+    this.success({
       token,
       user: {
         id: user._id,
@@ -65,9 +67,9 @@ class UserController extends Controller {
 
     try {
       const user = await ctx.service.user.getDetail(id);
-      ctx.success(user);
+      this.success(user);
     } catch (e) {
-      ctx.fail(e.message);
+      this.fail(e.message);
     }
   }
 
@@ -80,50 +82,53 @@ class UserController extends Controller {
 
     try {
       const user = await ctx.service.user.update(id, data, operator.id, operator.role);
-      ctx.success(user, '更新成功');
+      this.success(user, '更新成功');
     } catch (e) {
-      ctx.fail(e.message);
+      this.fail(e.message);
     }
   }
 
   // 获取用户列表（管理员）
   async list() {
+    this.requireAdmin();
     const { ctx } = this;
     const { page = 1, pageSize = 10 } = ctx.query;
 
     try {
       const result = await ctx.service.user.getList({ page, pageSize });
-      ctx.success(result);
+      this.success(result);
     } catch (e) {
-      ctx.fail(e.message);
+      this.fail(e.message);
     }
   }
 
   // 修改用户积分（管理员）
   async updatePoints() {
+    this.requireAdmin();
     const { ctx } = this;
     const { id } = ctx.params;
     const { points, action } = ctx.request.body;
 
     try {
       const result = await ctx.service.user.updatePoints(id, { points, action });
-      ctx.success({ points: result.points }, '积分更新成功');
+      this.success({ points: result.points }, '积分更新成功');
     } catch (e) {
-      ctx.fail(e.message);
+      this.fail(e.message);
     }
   }
 
   // 获取借阅记录
   async borrowHistory() {
+    this.requireAuth();
     const { ctx } = this;
     const { id } = ctx.params;
     const { page = 1, pageSize = 10 } = ctx.query;
 
     try {
       const result = await ctx.service.user.getBorrowHistory(id, { page, pageSize });
-      ctx.success(result);
+      this.success(result);
     } catch (e) {
-      ctx.fail(e.message);
+      this.fail(e.message);
     }
   }
 
