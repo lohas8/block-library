@@ -20,6 +20,9 @@ module.exports = app => {
   router.put('/api/users/:id', controller.user.update);
   router.post('/api/users/:id/points', controller.user.updatePoints);
   router.get('/api/users/:id/borrow-history', controller.user.borrowHistory);
+  router.get('/api/users/:id/invites', controller.user.getInvites);
+  router.get('/api/users/:id/invited-by', controller.user.getInvitedBy);
+  router.get('/api/users/:id/applied-rules', controller.user.getAppliedRules);
 
   // 借阅相关
   router.post('/api/borrow', controller.borrow.borrow);

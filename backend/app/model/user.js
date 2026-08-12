@@ -11,7 +11,9 @@ module.exports = app => {
     phone: { type: String },
     email: { type: String },
     points: { type: Number, default: 0 },
-    role: { type: String, enum: ['user', 'admin'], default: 'user' },
+    role: { type: String, enum: ['user', 'admin', 'super_admin'], default: 'user' },
+    invitedBy: { type: Schema.Types.ObjectId, ref: 'User', default: null },
+    inviteCode: { type: String, unique: true, sparse: true },
   }, { timestamps: true });
 
   // 密码加密

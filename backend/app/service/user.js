@@ -54,29 +54,50 @@ class UserService extends Service {
   }
 
   /**
-   * 获取邀请我的人（基于邀请关系的实现）
+   * 获取邀请我的人（谁邀请了我）
    */
   async getInvitedBy(userId) {
-    // 当前 User 模型没有 invitedBy 字段，这里按关联查询实现
-    // 如果后续有邀请关系表，可在此扩展
     const user = await this.ctx.model.User.findById(userId).select('-password');
     if (!user) {
       throw new Error('用户不存在');
     }
-    // 暂返回空数组，待邀请关系表实现后扩展
-    return [];
+    if (!user.invitedBy) {
+      return null;
+    }
+    const inviter = await this.ctx.model.User.findById(user.invitedBy).select('-password');
+    return inviter;
   }
 
   /**
-   * 获取我的邀请列表
+   * 获取我的邀请列表（我邀请了哪些人）
    */
   async getInvites(userId) {
     const user = await this.ctx.model.User.findById(userId).select('-password');
     if (!user) {
       throw new Error('用户不存在');
     }
-    // 暂返回空数组，待邀请关系表实现后扩展
-    return [];
+    const invites = await this.ctx.model.User.find({ invitedBy: userId }).select('-password');
+    return invites;
+  }
+
+  /**
+   * 获取用户参与的规则申请记录
+   */
+  async getAppliedRules(userId) {
+    const user = await this.ctx.model.User.findById(userId).select('-password');
+    if (!user) {
+      throw new Error('用户不存在');
+    }
+    // 查找该用户的规则申请记录（假设有 RuleApplication 模型）
+    // 如果没有，则返回空数组
+    const RuleApplication = this.ctx.model.RuleApplication;
+    if (!RuleApplication) {
+      return [];
+    }
+    const applications = await RuleApplication.find({ userId })
+      .populate('ruleId')
+      .sort({ createdAt: -1 });
+    return applications;
   }
 
   /**

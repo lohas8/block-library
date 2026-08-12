@@ -126,6 +126,45 @@ class UserController extends Controller {
       ctx.fail(e.message);
     }
   }
+
+  // 获取邀请我的人
+  async getInvitedBy() {
+    const { ctx } = this;
+    const { id } = ctx.params;
+
+    try {
+      const result = await ctx.service.user.getInvitedBy(id);
+      ctx.success(result);
+    } catch (e) {
+      ctx.fail(e.message);
+    }
+  }
+
+  // 获取我的邀请列表
+  async getInvites() {
+    const { ctx } = this;
+    const { id } = ctx.params;
+
+    try {
+      const result = await ctx.service.user.getInvites(id);
+      ctx.success({ list: result });
+    } catch (e) {
+      ctx.fail(e.message);
+    }
+  }
+
+  // 获取用户参与的规则申请
+  async getAppliedRules() {
+    const { ctx } = this;
+    const { id } = ctx.params;
+
+    try {
+      const result = await ctx.service.user.getAppliedRules(id);
+      ctx.success({ list: result });
+    } catch (e) {
+      ctx.fail(e.message);
+    }
+  }
 }
 
 module.exports = UserController;
