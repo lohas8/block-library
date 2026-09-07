@@ -39,8 +39,8 @@ module.exports = app => {
   router.get('/api/books', controller.book.list);
   router.get('/api/books/:id', controller.book.detail);
   router.post('/api/books', controller.book.create);
-  router.put('/api/books/:id', validateObjectId());
-  router.delete('/api/books/:id', validateObjectId());
+  router.put('/api/books/:id', controller.book.update);
+  router.delete('/api/books/:id', controller.book.delete);
 
   // 用户相关
   router.post('/api/users/register', controller.user.register);
@@ -137,4 +137,13 @@ module.exports = app => {
   router.post('/api/rules/:id/apply', controller.rule.apply);
   router.post('/api/rules/approvals/:id/approve', controller.rule.approve);
   router.post('/api/rules/approvals/:id/reject', controller.rule.reject);
+
+  // 规则评估模块（自动评分 + 图片凭证）
+  router.post('/api/rule-evaluations', controller.ruleEvaluation.create);
+  router.get('/api/rule-evaluations', controller.ruleEvaluation.list);
+  router.get('/api/rule-evaluations/user/:userId', controller.ruleEvaluation.getByUser);
+  router.get('/api/rule-evaluations/:id', validateObjectId());
+  router.post('/api/rule-evaluations/:id/score', controller.ruleEvaluation.score);
+  router.post('/api/rule-evaluations/:id/reject', controller.ruleEvaluation.reject);
+  router.post('/api/rule-evaluations/:id/images', controller.ruleEvaluation.uploadImages);
 };

@@ -48,6 +48,7 @@ class BookController extends BaseController {
 
   // 更新图书
   async update() {
+    this.requireAuth();
     const { ctx } = this;
     const { id } = ctx.params;
     const data = ctx.request.body;
@@ -62,6 +63,7 @@ class BookController extends BaseController {
 
   // 删除图书
   async delete() {
+    this.requireAuth();
     const { ctx } = this;
     const { id } = ctx.params;
 
