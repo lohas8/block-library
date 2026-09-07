@@ -2,12 +2,12 @@
 const Service = require('egg').Service;
 
 class RuleService extends Service {
-  // 获取模型（支持 mongoose 6.x 兼容性）
+  // 获取模型（Egg-mongoose 中 ctx.model 是对象，直接用 ctx.model.Rule 访问）
   get Rule() {
-    return this.ctx.model.Rule || this.ctx.model('Rule');
+    return this.ctx.model.Rule;
   }
   get RuleApproval() {
-    return this.ctx.model.RuleApproval || this.ctx.model('RuleApproval');
+    return this.ctx.model.RuleApproval;
   }
 
   // 规则列表

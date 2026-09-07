@@ -5,7 +5,7 @@
 const Service = require('egg').Service;
 
 class RuleEvaluationService extends Service {
-  // 获取模型
+  // 获取模型（Egg-mongoose 中 ctx.model 是对象）
   get Evaluation() {
     return this.ctx.model.RuleEvaluation;
   }
@@ -51,6 +51,8 @@ class RuleEvaluationService extends Service {
     // 满足自动评分条件：上传了至少1张图片
     if (images && images.length > 0) {
       await this.autoScore(evaluation._id, rule);
+      // 重新获取更新后的评估记录
+      return await this.Evaluation.findById(evaluation._id).lean();
     }
 
     return evaluation.toObject();

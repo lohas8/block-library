@@ -130,10 +130,10 @@ module.exports = app => {
   // 规则管理模块
   router.get('/api/rules', controller.rule.list);
   router.get('/api/rules/approvals', controller.rule.listApprovals);
-  router.get('/api/rules/:id', validateObjectId());
+  router.get('/api/rules/:id', controller.rule.detail);
   router.post('/api/rules', controller.rule.create);
-  router.put('/api/rules/:id', validateObjectId());
-  router.delete('/api/rules/:id', validateObjectId());
+  router.put('/api/rules/:id', controller.rule.update);
+  router.delete('/api/rules/:id', controller.rule.delete);
   router.post('/api/rules/:id/apply', controller.rule.apply);
   router.post('/api/rules/approvals/:id/approve', controller.rule.approve);
   router.post('/api/rules/approvals/:id/reject', controller.rule.reject);
@@ -142,7 +142,7 @@ module.exports = app => {
   router.post('/api/rule-evaluations', controller.ruleEvaluation.create);
   router.get('/api/rule-evaluations', controller.ruleEvaluation.list);
   router.get('/api/rule-evaluations/user/:userId', controller.ruleEvaluation.getByUser);
-  router.get('/api/rule-evaluations/:id', validateObjectId());
+  router.get('/api/rule-evaluations/:id', controller.ruleEvaluation.detail);
   router.post('/api/rule-evaluations/:id/score', controller.ruleEvaluation.score);
   router.post('/api/rule-evaluations/:id/reject', controller.ruleEvaluation.reject);
   router.post('/api/rule-evaluations/:id/images', controller.ruleEvaluation.uploadImages);

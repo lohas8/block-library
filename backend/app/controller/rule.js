@@ -40,7 +40,8 @@ class RuleController extends Controller {
   // 申请规则
   async apply() {
     const { ctx } = this;
-    const { ruleId, ...data } = ctx.request.body;
+    const ruleId = ctx.params.id;  // 从 URL 参数获取
+    const { ...data } = ctx.request.body;
     const user = ctx.state.user || {};
     const approval = await ctx.service.rule.apply(
       ruleId, 
