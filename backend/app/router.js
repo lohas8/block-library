@@ -46,10 +46,10 @@ module.exports = app => {
   router.post('/api/users/register', controller.user.register);
   router.post('/api/users/login', controller.user.login);
   router.get('/api/users', controller.user.list);
-  router.get('/api/users/:id', validateObjectId());
-  router.put('/api/users/:id', validateObjectId());
-  router.post('/api/users/:id/points', validateObjectId());
-  router.get('/api/users/:id/borrow-history', validateObjectId());
+  router.get('/api/users/:id', controller.user.detail);
+  router.put('/api/users/:id', controller.user.update);
+  router.post('/api/users/:id/points', controller.user.updatePoints);
+  router.get('/api/users/:id/borrow-history', controller.user.borrowHistory);
   router.get('/api/users/:id/invites', controller.user.getInvites);
   router.get('/api/users/:id/invited-by', controller.user.getInvitedBy);
   router.get('/api/users/:id/applied-rules', controller.user.getAppliedRules);

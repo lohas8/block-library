@@ -127,6 +127,11 @@ class UserService extends Service {
       throw new Error('用户不存在');
     }
 
+    // 扣减时积分数必须为正数
+    if (action !== 'add' && points < 0) {
+      throw new Error('积分数值必须为正数');
+    }
+
     if (action === 'add') {
       user.points += points;
     } else {

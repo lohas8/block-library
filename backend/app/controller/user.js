@@ -38,25 +38,23 @@ class UserController extends BaseController {
 
     const user = await ctx.model.User.findOne({ username });
     if (!user) {
-      return this.fail('用户名或密码错误');
+      return this.fail('用户名或密码错误', -1, 401);
     }
 
     if (!user.comparePassword(password)) {
-      return this.fail('用户名或密码错误');
+      return this.fail('用户名或密码错误', -1, 401);
     }
 
     // 生成 token: base64(userId:username:role)
     const token = Buffer.from(`${user._id}:${user.username}:${user.role}`).toString('base64');
 
     this.success({
+      id: user._id,
+      username: user.username,
+      name: user.name,
+      points: user.points,
+      role: user.role,
       token,
-      user: {
-        id: user._id,
-        username: user.username,
-        name: user.name,
-        points: user.points,
-        role: user.role,
-      },
     }, '登录成功');
   }
 
@@ -69,7 +67,7 @@ class UserController extends BaseController {
       const user = await ctx.service.user.getDetail(id);
       this.success(user);
     } catch (e) {
-      this.fail(e.message);
+      this.fail(e.message, -1, 404);
     }
   }
 
@@ -84,7 +82,12 @@ class UserController extends BaseController {
       const user = await ctx.service.user.update(id, data, operator.id, operator.role);
       this.success(user, '更新成功');
     } catch (e) {
-      this.fail(e.message);
+      const msg = e.message;
+      if (msg.includes('不存在') || msg.includes('无权限')) {
+        this.fail(msg, -1, msg.includes('不存在') ? 404 : 403);
+      } else {
+        this.fail(msg);
+      }
     }
   }
 
@@ -113,7 +116,7 @@ class UserController extends BaseController {
       const result = await ctx.service.user.updatePoints(id, { points, action });
       this.success({ points: result.points }, '积分更新成功');
     } catch (e) {
-      this.fail(e.message);
+      this.fail(e.message, -1, 400);
     }
   }
 

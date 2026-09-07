@@ -76,15 +76,28 @@ describe('用户接口测试', () => {
           username: 'nonexistent',
           password: '123456'
         })
-        .expect(404);
+        .expect(401);
     });
   });
 
   describe('GET /api/users - 用户列表', () => {
     it('应该返回用户列表（需管理员权限）', async () => {
+      // 注册管理员用户
+      const adminUser = {
+        username: 'admin_' + Date.now(),
+        password: '123456',
+        name: '管理员',
+        role: 'admin'
+      };
+      await request(BASE_URL).post('/api/users/register').send(adminUser);
+      const adminLogin = await request(BASE_URL)
+        .post('/api/users/login')
+        .send({ username: adminUser.username, password: adminUser.password });
+      const adminToken = adminLogin.body.data.token;
+
       const response = await request(BASE_URL)
         .get('/api/users')
-        .set('Authorization', `Bearer ${authToken}`)
+        .set('Authorization', `Bearer ${adminToken}`)
         .expect(200);
       
       expect(Array.isArray(response.body.data.list)).toBe(true);
@@ -104,7 +117,7 @@ describe('用户接口测试', () => {
         .set('Authorization', `Bearer ${authToken}`)
         .expect(200);
       
-      expect(response.body).toHaveProperty('username');
+      expect(response.body.data).toHaveProperty('username');
     });
 
     it('用户不存在应返回404', async () => {
@@ -137,21 +150,55 @@ describe('用户接口测试', () => {
 
   describe('POST /api/users/:id/points - 更新积分', () => {
     it('应该成功增加用户积分', async () => {
+      // 需要管理员权限
+      const adminUser = {
+        username: 'adminpts_' + Date.now(),
+        password: '123456',
+        name: '管理员',
+        role: 'admin'
+      };
+      await request(BASE_URL).post('/api/users/register').send(adminUser);
+      const adminLogin = await request(BASE_URL)
+        .post('/api/users/login')
+        .send({ username: adminUser.username, password: adminUser.password });
+      const adminToken = adminLogin.body.data.token;
+
       const response = await request(BASE_URL)
         .post(`/api/users/${testUserId}/points`)
-        .set('Authorization', `Bearer ${authToken}`)
-        .send({ points: 10, type: 'add', reason: '测试增加' })
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({ points: 10, action: 'add', reason: '测试增加' })
         .expect(200);
       
       expect(response.body.data.points).toBeGreaterThanOrEqual(10);
     });
 
     it('积分不足应返回错误', async () => {
+      const adminUser = {
+        username: 'adminpts2_' + Date.now(),
+        password: '123456',
+        name: '管理员',
+        role: 'admin'
+      };
+      await request(BASE_URL).post('/api/users/register').send(adminUser);
+      const adminLogin = await request(BASE_URL)
+        .post('/api/users/login')
+        .send({ username: adminUser.username, password: adminUser.password });
+      const adminToken = adminLogin.body.data.token;
+
+      // 先给用户添加100积分
+      await request(BASE_URL)
+        .post(`/api/users/${testUserId}/points`)
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({ points: 100, action: 'add', reason: '初始积分' });
+
+      // 尝试扣减超过现有积分的数量（200 > 100）
       const response = await request(BASE_URL)
         .post(`/api/users/${testUserId}/points`)
-        .set('Authorization', `Bearer ${authToken}`)
-        .send({ points: -99999, type: 'deduct', reason: '测试扣减' })
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({ points: 200, action: 'deduct', reason: '测试扣减' })
         .expect(400);
+      
+      expect(response.body.msg).toContain('积分不足');
     });
   });
 
@@ -162,7 +209,7 @@ describe('用户接口测试', () => {
         .set('Authorization', `Bearer ${authToken}`)
         .expect(200);
       
-      expect(Array.isArray(response.body)).toBe(true);
+      expect(Array.isArray(response.body.data.list)).toBe(true);
     });
 
     it('支持分页', async () => {
@@ -171,7 +218,8 @@ describe('用户接口测试', () => {
         .set('Authorization', `Bearer ${authToken}`)
         .expect(200);
       
-      expect(response.body).toHaveProperty('page'); expect(response.body).toHaveProperty('pageSize');
+      expect(response.body.data).toHaveProperty('page');
+      expect(response.body.data).toHaveProperty('pageSize');
     });
   });
 });
