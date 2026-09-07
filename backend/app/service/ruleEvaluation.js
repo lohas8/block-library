@@ -161,22 +161,26 @@ class RuleEvaluationService extends Service {
     const { communityId, status, userId, page = 1, pageSize = 10 } = params;
     const query = {};
     
+    // 确保分页参数是数字
+    const pageNum = parseInt(page, 10) || 1;
+    const pageSizeNum = parseInt(pageSize, 10) || 10;
+    
     if (communityId) query.communityId = communityId;
     if (status) query.status = status;
     if (userId) query.userId = userId;
 
-    const skip = (page - 1) * pageSize;
+    const skip = (pageNum - 1) * pageSizeNum;
     const [list, total] = await Promise.all([
       this.Evaluation.find(query)
         .sort({ createdAt: -1 })
         .skip(skip)
-        .limit(pageSize)
+        .limit(pageSizeNum)
         .populate('ruleId')
         .lean(),
       this.Evaluation.countDocuments(query),
     ]);
 
-    return { list, total, page, pageSize };
+    return { list, total, page: pageNum, pageSize: pageSizeNum };
   }
 
   /**
@@ -211,6 +215,9 @@ class RuleEvaluationService extends Service {
       const rule = await this.Rule.findById(evaluation.ruleId);
       if (rule && newImages.length > 0) {
         await this.autoScore(evaluation._id, rule);
+        // 重新获取更新后的评估记录
+        const updated = await this.Evaluation.findById(id).lean();
+        return updated;
       }
     }
 
