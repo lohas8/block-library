@@ -12,8 +12,12 @@ class RuleEvaluationController extends Controller {
    */
   async create() {
     const { ctx } = this;
-    const evaluation = await ctx.service.ruleEvaluation.create(ctx.request.body);
-    ctx.body = { code: 0, msg: '评估创建成功', data: evaluation };
+    try {
+      const evaluation = await ctx.service.ruleEvaluation.create(ctx.request.body);
+      ctx.body = { code: 0, msg: '评估创建成功', data: evaluation };
+    } catch (e) {
+      ctx.body = { code: -1, msg: e.message, data: null };
+    }
   }
 
   /**
@@ -22,8 +26,12 @@ class RuleEvaluationController extends Controller {
    */
   async detail() {
     const { ctx } = this;
-    const evaluation = await ctx.service.ruleEvaluation.detail(ctx.params.id);
-    ctx.body = { code: 0, msg: 'success', data: evaluation };
+    try {
+      const evaluation = await ctx.service.ruleEvaluation.detail(ctx.params.id);
+      ctx.body = { code: 0, msg: 'success', data: evaluation };
+    } catch (e) {
+      ctx.body = { code: -1, msg: e.message, data: null };
+    }
   }
 
   /**
@@ -32,8 +40,12 @@ class RuleEvaluationController extends Controller {
    */
   async list() {
     const { ctx } = this;
-    const result = await ctx.service.ruleEvaluation.list(ctx.query);
-    ctx.body = { code: 0, msg: 'success', list: result.list, total: result.total };
+    try {
+      const result = await ctx.service.ruleEvaluation.list(ctx.query);
+      ctx.body = { code: 0, msg: 'success', list: result.list, total: result.total };
+    } catch (e) {
+      ctx.body = { code: -1, msg: e.message, data: null };
+    }
   }
 
   /**
@@ -43,9 +55,13 @@ class RuleEvaluationController extends Controller {
    */
   async score() {
     const { ctx } = this;
-    const { points, remark } = ctx.request.body;
-    const evaluation = await ctx.service.ruleEvaluation.manualScore(ctx.params.id, points, remark);
-    ctx.body = { code: 0, msg: '评分成功', data: evaluation };
+    try {
+      const { points, remark } = ctx.request.body;
+      const evaluation = await ctx.service.ruleEvaluation.manualScore(ctx.params.id, points, remark);
+      ctx.body = { code: 0, msg: '评分成功', data: evaluation };
+    } catch (e) {
+      ctx.body = { code: -1, msg: e.message, data: null };
+    }
   }
 
   /**
@@ -55,9 +71,13 @@ class RuleEvaluationController extends Controller {
    */
   async reject() {
     const { ctx } = this;
-    const { remark } = ctx.request.body || {};
-    const evaluation = await ctx.service.ruleEvaluation.reject(ctx.params.id, remark);
-    ctx.body = { code: 0, msg: '已驳回', data: evaluation };
+    try {
+      const { remark } = ctx.request.body || {};
+      const evaluation = await ctx.service.ruleEvaluation.reject(ctx.params.id, remark);
+      ctx.body = { code: 0, msg: '已驳回', data: evaluation };
+    } catch (e) {
+      ctx.body = { code: -1, msg: e.message, data: null };
+    }
   }
 
   /**
@@ -67,12 +87,17 @@ class RuleEvaluationController extends Controller {
    */
   async uploadImages() {
     const { ctx } = this;
-    const { images } = ctx.request.body;
-    if (!images || !Array.isArray(images)) {
-      ctx.throw(400, 'images 参数必须是数组');
+    try {
+      const { images } = ctx.request.body;
+      if (!images || !Array.isArray(images)) {
+        ctx.body = { code: -1, msg: 'images 参数必须是数组', data: null };
+        return;
+      }
+      const evaluation = await ctx.service.ruleEvaluation.uploadImages(ctx.params.id, images);
+      ctx.body = { code: 0, msg: '图片上传成功', data: evaluation };
+    } catch (e) {
+      ctx.body = { code: -1, msg: e.message, data: null };
     }
-    const evaluation = await ctx.service.ruleEvaluation.uploadImages(ctx.params.id, images);
-    ctx.body = { code: 0, msg: '图片上传成功', data: evaluation };
   }
 
   /**
@@ -81,9 +106,13 @@ class RuleEvaluationController extends Controller {
    */
   async getByUser() {
     const { ctx } = this;
-    const { communityId } = ctx.query;
-    const list = await ctx.service.ruleEvaluation.getByUser(ctx.params.userId, communityId);
-    ctx.body = { code: 0, msg: 'success', list };
+    try {
+      const { communityId } = ctx.query;
+      const list = await ctx.service.ruleEvaluation.getByUser(ctx.params.userId, communityId);
+      ctx.body = { code: 0, msg: 'success', list };
+    } catch (e) {
+      ctx.body = { code: -1, msg: e.message, data: null };
+    }
   }
 }
 

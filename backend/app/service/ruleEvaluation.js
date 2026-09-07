@@ -26,13 +26,13 @@ class RuleEvaluationService extends Service {
     // 检查是否已有评估记录
     const existing = await this.Evaluation.findOne({ ruleApprovalId });
     if (existing) {
-      this.ctx.throw(400, '该申请已有评估记录');
+      throw new Error('该申请已有评估记录');
     }
 
     // 获取规则信息
     const rule = await this.Rule.findById(ruleId);
     if (!rule) {
-      this.ctx.throw(404, '规则不存在');
+      throw new Error('规则不存在');
     }
 
     // 创建评估记录
@@ -99,7 +99,7 @@ class RuleEvaluationService extends Service {
   async manualScore(evaluationId, points, remark = '') {
     const evaluation = await this.Evaluation.findById(evaluationId);
     if (!evaluation) {
-      this.ctx.throw(404, '评估记录不存在');
+      throw new Error('评估记录不存在');
     }
 
     evaluation.status = 'scored';
@@ -124,7 +124,7 @@ class RuleEvaluationService extends Service {
   async reject(evaluationId, remark = '') {
     const evaluation = await this.Evaluation.findById(evaluationId);
     if (!evaluation) {
-      this.ctx.throw(404, '评估记录不存在');
+      throw new Error('评估记录不存在');
     }
 
     evaluation.status = 'rejected';
@@ -149,7 +149,7 @@ class RuleEvaluationService extends Service {
       .lean();
     
     if (!evaluation) {
-      this.ctx.throw(404, '评估记录不存在');
+      throw new Error('评估记录不存在');
     }
     return evaluation;
   }
@@ -202,7 +202,7 @@ class RuleEvaluationService extends Service {
   async uploadImages(id, images) {
     const evaluation = await this.Evaluation.findById(id);
     if (!evaluation) {
-      this.ctx.throw(404, '评估记录不存在');
+      throw new Error('评估记录不存在');
     }
 
     // 最多9张图片

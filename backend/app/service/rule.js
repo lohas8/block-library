@@ -35,7 +35,7 @@ class RuleService extends Service {
   async detail(id) {
     const rule = await this.Rule.findById(id).lean();
     if (!rule) {
-      this.ctx.throw(404, '规则不存在');
+      throw new Error('规则不存在');
     }
     return rule;
   }
@@ -56,7 +56,7 @@ class RuleService extends Service {
     ).lean();
     
     if (!rule) {
-      this.ctx.throw(404, '规则不存在');
+      throw new Error('规则不存在');
     }
     return rule;
   }
@@ -65,7 +65,7 @@ class RuleService extends Service {
   async delete(id) {
     const result = await this.Rule.findByIdAndDelete(id);
     if (!result) {
-      this.ctx.throw(404, '规则不存在');
+      throw new Error('规则不存在');
     }
     // 同时删除相关申请
     await this.RuleApproval.deleteMany({ ruleId: id });
@@ -76,7 +76,7 @@ class RuleService extends Service {
   async apply(ruleId, userId, userName, data = {}) {
     const rule = await this.Rule.findById(ruleId);
     if (!rule) {
-      this.ctx.throw(404, '规则不存在');
+      throw new Error('规则不存在');
     }
 
     // 检查是否有待处理的申请
@@ -86,7 +86,7 @@ class RuleService extends Service {
       status: 'pending',
     });
     if (existing) {
-      this.ctx.throw(400, '已有待处理的申请');
+      throw new Error('已有待处理的申请');
     }
 
     const approval = new this.RuleApproval({
@@ -104,10 +104,10 @@ class RuleService extends Service {
   async approve(approvalId) {
     const approval = await this.RuleApproval.findById(approvalId);
     if (!approval) {
-      this.ctx.throw(404, '申请不存在');
+      throw new Error('申请不存在');
     }
     if (approval.status !== 'pending') {
-      this.ctx.throw(400, '申请已被处理');
+      throw new Error('申请已被处理');
     }
 
     approval.status = 'approved';
@@ -119,10 +119,10 @@ class RuleService extends Service {
   async reject(approvalId, remark = '') {
     const approval = await this.RuleApproval.findById(approvalId);
     if (!approval) {
-      this.ctx.throw(404, '申请不存在');
+      throw new Error('申请不存在');
     }
     if (approval.status !== 'pending') {
-      this.ctx.throw(400, '申请已被处理');
+      throw new Error('申请已被处理');
     }
 
     approval.status = 'rejected';
