@@ -9,8 +9,10 @@ const BASE_URL = process.env.TEST_BASE_URL || 'http://localhost:7001';
 
 describe('借阅接口测试', () => {
   let authToken;
+  let adminToken;
   let testBorrowId;
   let testUserId;
+  let adminUserId;
   let testBookId;
 
   // 准备：创建测试用户并登录
@@ -26,7 +28,7 @@ describe('借阅接口测试', () => {
       .send({ username: 'borrowuser', password: 'test123' });
 
     authToken = loginRes.body.data.token;
-    testUserId = loginRes.body.data.user.id;
+    testUserId = loginRes.body.data.id;
 
     // 创建一个可借的图书
     await request(BASE_URL)
@@ -36,13 +38,38 @@ describe('借阅接口测试', () => {
     const adminLogin = await request(BASE_URL)
       .post('/api/users/login')
       .send({ username: 'bookadmin', password: 'admin123' });
-    const adminToken = adminLogin.body.data.token;
+    adminToken = adminLogin.body.data.token;
+    adminUserId = adminLogin.body.data.id;
 
     const bookRes = await request(BASE_URL)
       .post('/api/books')
       .set('Authorization', `Bearer ${adminToken}`)
       .send({ title: '测试图书-借阅', author: '测试作者', total: 5, available: 5 });
     testBookId = bookRes.body.data._id;
+  });
+
+  afterAll(async () => {
+    // 删除测试图书
+    if (adminToken && testBookId) {
+      await request(BASE_URL)
+        .delete(`/api/books/${testBookId}`)
+        .set('Authorization', `Bearer ${adminToken}`)
+        .catch(() => {});
+    }
+    // 删除测试用户
+    if (authToken && testUserId) {
+      await request(BASE_URL)
+        .delete(`/api/users/${testUserId}`)
+        .set('Authorization', `Bearer ${authToken}`)
+        .catch(() => {});
+    }
+    if (adminToken && adminUserId) {
+      await request(BASE_URL)
+        .delete(`/api/users/${adminUserId}`)
+        .set('Authorization', `Bearer ${adminToken}`)
+        .catch(() => {});
+    }
+    console.log('🧹 borrow 测试数据已清理');
   });
 
   describe('POST /api/borrow - 借书', () => {

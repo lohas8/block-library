@@ -12,7 +12,11 @@ const TEST_YEAR = new Date().getFullYear();
 describe('物业评价模块 API 测试', () => {
   let adminToken;
   let userToken;
+  let adminUserId;
+  let userId;
   let createdCategoryId;
+  // 追踪测试中创建的分类
+  const createdCategoryIds = [];
 
   // 在所有测试前先登录获取真实 token
   beforeAll(async () => {
@@ -26,6 +30,7 @@ describe('物业评价模块 API 测试', () => {
       .post('/api/users/login')
       .send({ username: 'rateadmin', password: 'admin123' });
     adminToken = adminLoginRes.body.data.token;
+    adminUserId = adminLoginRes.body.data.id;
 
     // 注册并登录普通用户
     await request(BASE_URL)
@@ -37,7 +42,34 @@ describe('物业评价模块 API 测试', () => {
       .post('/api/users/login')
       .send({ username: 'rateuser', password: 'user123' });
     userToken = userLoginRes.body.data.token;
+    userId = userLoginRes.body.data.id;
   }, 30000);
+
+  afterAll(async () => {
+    // 清理测试分类
+    for (const catId of createdCategoryIds) {
+      if (adminToken && catId) {
+        await request(BASE_URL)
+          .delete(`/api/rating-categories/${catId}`)
+          .set('Authorization', `Bearer ${adminToken}`)
+          .catch(() => {});
+      }
+    }
+    // 删除测试用户
+    if (userToken && userId) {
+      await request(BASE_URL)
+        .delete(`/api/users/${userId}`)
+        .set('Authorization', `Bearer ${userToken}`)
+        .catch(() => {});
+    }
+    if (adminToken && adminUserId) {
+      await request(BASE_URL)
+        .delete(`/api/users/${adminUserId}`)
+        .set('Authorization', `Bearer ${adminToken}`)
+        .catch(() => {});
+    }
+    console.log('🧹 propertyRating 测试数据已清理');
+  });
 
   // =============================================
   // 评价配置管理（管理员）
@@ -64,6 +96,7 @@ describe('物业评价模块 API 测试', () => {
       expect(Array.isArray(response.body.data.items)).toBe(true);
       expect(response.body.data.items.length).toBe(3);
       createdCategoryId = response.body.data._id;
+      if (createdCategoryId) createdCategoryIds.push(createdCategoryId);
     });
 
     it('普通用户创建应返回 403', async () => {

@@ -24,7 +24,18 @@ describe('通知接口测试', () => {
       .send({ username: 'notifuser', password: 'test123' });
 
     authToken = loginRes.body.data.token;
-    testUserId = loginRes.body.data.user.id;
+    testUserId = loginRes.body.data.id;
+  });
+
+  afterAll(async () => {
+    // 删除测试用户
+    if (authToken && testUserId) {
+      await request(BASE_URL)
+        .delete(`/api/users/${testUserId}`)
+        .set('Authorization', `Bearer ${authToken}`)
+        .catch(() => {});
+    }
+    console.log('🧹 notification 测试数据已清理');
   });
 
   describe('GET /api/notifications - 通知列表', () => {

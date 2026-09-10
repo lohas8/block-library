@@ -10,7 +10,10 @@ describe('投票模块 API 测试', () => {
   let adminToken;
   let userToken;
   let testUserId;
+  let adminUserId;
   let createdVoteId;
+  // 追踪测试中创建的投票
+  const createdVoteIds = [];
 
   // 在所有测试前先登录获取 token
   beforeAll(async () => {
@@ -24,6 +27,7 @@ describe('投票模块 API 测试', () => {
       .post('/api/users/login')
       .send({ username: 'voteadmin', password: 'admin123' });
     adminToken = adminLoginRes.body.data.token;
+    adminUserId = adminLoginRes.body.data.id;
 
     // 注册并登录普通用户
     await request(BASE_URL)
@@ -35,7 +39,33 @@ describe('投票模块 API 测试', () => {
       .post('/api/users/login')
       .send({ username: 'voteuser', password: 'user123' });
     userToken = userLoginRes.body.data.token;
-    testUserId = userLoginRes.body.data.user.id;
+    testUserId = userLoginRes.body.data.id;
+  });
+
+  afterAll(async () => {
+    // 清理测试投票
+    for (const voteId of createdVoteIds) {
+      if (adminToken && voteId) {
+        await request(BASE_URL)
+          .delete(`/api/votes/${voteId}`)
+          .set('Authorization', `Bearer ${adminToken}`)
+          .catch(() => {});
+      }
+    }
+    // 删除测试用户
+    if (userToken && testUserId) {
+      await request(BASE_URL)
+        .delete(`/api/users/${testUserId}`)
+        .set('Authorization', `Bearer ${userToken}`)
+        .catch(() => {});
+    }
+    if (adminToken && adminUserId) {
+      await request(BASE_URL)
+        .delete(`/api/users/${adminUserId}`)
+        .set('Authorization', `Bearer ${adminToken}`)
+        .catch(() => {});
+    }
+    console.log('🧹 vote 测试数据已清理');
   });
 
   describe('POST /api/votes - 创建投票（需管理员权限）', () => {
@@ -60,6 +90,7 @@ describe('投票模块 API 测试', () => {
       expect(Array.isArray(response.body.data.items)).toBe(true);
       expect(response.body.data.items.length).toBe(2);
       createdVoteId = response.body.data._id;
+      if (createdVoteId) createdVoteIds.push(createdVoteId);
     });
 
     it('普通用户创建投票应返回 403', async () => {

@@ -12,19 +12,34 @@ describe('积分接口测试', () => {
   let adminToken;
   let testItemId;
   let testUserId = 1;
+  // 追踪测试中创建的积分商品，用于清理
+  const createdItemIds = [];
 
   beforeAll(async () => {
     // 普通用户 token
     const userLogin = await request(BASE_URL)
       .post('/api/users/login')
       .send({ username: 'testuser', password: '123456' });
-    authToken = userLogin.body.token;
+    authToken = userLogin.body.data?.token || userLogin.body.token;
 
     // 管理员 token (需要预先创建管理员用户)
     const adminLogin = await request(BASE_URL)
       .post('/api/users/login')
       .send({ username: 'admin', password: 'admin123' });
-    adminToken = adminLogin.body.token || authToken; // 降级使用
+    adminToken = adminLogin.body.data?.token || adminLogin.body.token || authToken;
+  });
+
+  afterAll(async () => {
+    // 清理测试中创建的积分商品
+    for (const itemId of createdItemIds) {
+      if (adminToken && itemId) {
+        await request(BASE_URL)
+          .delete(`/api/points/items/${itemId}`)
+          .set('Authorization', `Bearer ${adminToken}`)
+          .catch(() => {});
+      }
+    }
+    console.log('🧹 points 测试数据已清理');
   });
 
   describe('GET /api/points/items - 积分商品列表', () => {
@@ -81,6 +96,7 @@ describe('积分接口测试', () => {
       
       expect(response.body).toHaveProperty('id');
       testItemId = response.body.data._id;
+      if (testItemId) createdItemIds.push(testItemId);
     });
 
     it('普通用户创建应返回403', async () => {
@@ -174,7 +190,9 @@ describe('积分接口测试', () => {
           stock: 100,
           category: '测试'
         });
-      exchangeItemId = itemRes.body.id;
+      exchangeItemId = itemRes.body.data?._id || itemRes.body.id;
+      // 追踪该商品，用于外层 afterAll 清理
+      if (exchangeItemId) createdItemIds.push(exchangeItemId);
     });
 
     it('应该成功兑换商品', async () => {

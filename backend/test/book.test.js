@@ -8,6 +8,7 @@ const BASE_URL = process.env.TEST_BASE_URL || 'http://localhost:7001';
 
 describe('图书接口测试', () => {
   let adminToken;
+  let adminUserId;
   let testBookId;
 
   beforeAll(async () => {
@@ -21,6 +22,18 @@ describe('图书接口测试', () => {
       .post('/api/users/login')
       .send({ username: 'bookadmin2', password: 'admin123' });
     adminToken = loginRes.body.data.token;
+    adminUserId = loginRes.body.data.id;
+  });
+
+  afterAll(async () => {
+    // 删除测试管理员用户
+    if (adminToken && adminUserId) {
+      await request(BASE_URL)
+        .delete(`/api/users/${adminUserId}`)
+        .set('Authorization', `Bearer ${adminToken}`)
+        .catch(() => {});
+    }
+    console.log('🧹 book 测试数据已清理');
   });
 
   describe('GET /api/books - 图书列表', () => {

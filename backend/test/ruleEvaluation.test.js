@@ -44,7 +44,7 @@ describe('规则评估模块 API 测试', () => {
 
     if (userLoginRes.body.data) {
       userToken = userLoginRes.body.data.token;
-      userId = userLoginRes.body.data.user?.id || userLoginRes.body.data.user?._id;
+      userId = userLoginRes.body.data.id;
     }
 
     // 3. 创建规则
@@ -432,13 +432,22 @@ describe('规则评估模块 API 测试', () => {
   // =============================================
   // 清理测试数据
   // =============================================
-  describe('清理测试数据', () => {
-    it('删除测试规则', async () => {
+  afterAll(async () => {
+    // 删除 beforeAll 创建的测试用户
+    if (userToken && TEST_USER.username) {
+      // 删除测试规则（beforeAll 创建的主规则）
       if (ruleId) {
         await request(BASE_URL)
           .delete(`/api/rules/${ruleId}`)
-          .set('Authorization', `Bearer ${userToken}`);
+          .set('Authorization', `Bearer ${userToken}`)
+          .catch(() => {});
       }
-    });
+      // 删除测试用户
+      await request(BASE_URL)
+        .delete(`/api/users/${userId}`)
+        .set('Authorization', `Bearer ${userToken}`)
+        .catch(() => {});
+    }
+    console.log('🧹 ruleEvaluation 测试数据已清理');
   });
 });
