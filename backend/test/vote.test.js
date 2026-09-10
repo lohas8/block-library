@@ -40,6 +40,21 @@ describe('投票模块 API 测试', () => {
       .send({ username: 'voteuser', password: 'user123' });
     userToken = userLoginRes.body.data.token;
     testUserId = userLoginRes.body.data.id;
+
+    // 确保 createdVoteId 被创建（兜底）
+    if (!createdVoteId && adminToken) {
+      const voteRes = await request(BASE_URL)
+        .post('/api/votes')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({
+          title: '初始化投票-' + Date.now(),
+          content: '测试',
+          vote_type: 'binary',
+          items: [{ label: '同意' }, { label: '反对' }],
+        });
+      createdVoteId = voteRes.body.data?._id;
+      if (createdVoteId) createdVoteIds.push(createdVoteId);
+    }
   });
 
   afterAll(async () => {
@@ -64,6 +79,13 @@ describe('投票模块 API 测试', () => {
         .delete(`/api/users/${adminUserId}`)
         .set('Authorization', `Bearer ${adminToken}`)
         .catch(() => {});
+    }
+    // 清理借阅记录
+    try {
+      const BorrowRecord = require('../app/model/borrowRecord');
+      await BorrowRecord.deleteMany({ userId: { $in: [testUserId, adminUserId].filter(Boolean) } });
+    } catch (e) {
+      // ignore
     }
     console.log('🧹 vote 测试数据已清理');
   });
@@ -163,10 +185,17 @@ describe('投票模块 API 测试', () => {
     it('业主应能成功投票', async () => {
       if (!createdVoteId) return;
 
+      // 获取投票详情（含选项ID）
+      const voteDetail = await request(BASE_URL)
+        .get(`/api/votes/${createdVoteId}`)
+        .expect(200);
+      const itemIds = voteDetail.body.data.items.map(i => i._id);
+      if (itemIds.length === 0) return;
+
       const response = await request(BASE_URL)
         .post(`/api/votes/${createdVoteId}/cast`)
         .set('Authorization', `Bearer ${userToken}`)
-        .send({ selected_item_ids: [createdVoteId] })
+        .send({ selected_item_ids: [itemIds[0]] })
         .expect(200);
 
       expect(response.body.data.success).toBe(true);
@@ -184,10 +213,18 @@ describe('投票模块 API 测试', () => {
     it('重复投票应返回错误', async () => {
       if (!createdVoteId) return;
 
+      // 先获取正确的选项ID再投票
+      const voteDetail = await request(BASE_URL)
+        .get(`/api/votes/${createdVoteId}`)
+        .expect(200);
+      const itemIds = voteDetail.body.data.items.map(i => i._id);
+      if (itemIds.length === 0) return;
+
+      // 再次投票（应提示已投过）
       const response = await request(BASE_URL)
         .post(`/api/votes/${createdVoteId}/cast`)
         .set('Authorization', `Bearer ${userToken}`)
-        .send({ selected_item_ids: [] })
+        .send({ selected_item_ids: [itemIds[0]] })
         .expect(400);
 
       expect(response.body.msg).toContain('已投过');

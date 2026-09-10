@@ -57,25 +57,25 @@ module.exports = app => {
   // 借阅相关
   router.post('/api/borrow', controller.borrow.borrow);
   router.get('/api/borrow', controller.borrow.list);
-  router.post('/api/borrow/return/:id', validateObjectId());
+  router.post('/api/borrow/return/:id', validateObjectId(), controller.borrow.return);
   router.post('/api/reserve', controller.borrow.reserve);
   router.get('/api/reserve', controller.borrow.reservationList);
-  router.post('/api/reserve/cancel/:id', validateObjectId());
+  router.post('/api/reserve/cancel/:id', validateObjectId(), controller.borrow.cancelReserve);
   router.get('/api/statistics', controller.borrow.statistics);
 
   // 积分兑换
   router.get('/api/points/items', controller.points.itemList);
   router.post('/api/points/items', controller.points.createItem);
   router.post('/api/points/exchange', controller.points.exchange);
-  router.put('/api/points/items/:id', validateObjectId());
-  router.delete('/api/points/items/:id', validateObjectId());
+  router.put('/api/points/items/:id', validateObjectId(), controller.points.updateItem);
+  router.delete('/api/points/items/:id', validateObjectId(), controller.points.deleteItem);
 
   // 通知
   router.get('/api/notifications', controller.notification.list);
   router.post('/api/notifications/read-all', controller.notification.markAllRead);
   router.post('/api/notifications', controller.notification.create);
-  router.post('/api/notifications/:id/read', validateObjectId());
-  router.delete('/api/notifications/:id', validateObjectId());
+  router.post('/api/notifications/:id/read', validateObjectId(), controller.notification.markRead);
+  router.delete('/api/notifications/:id', validateObjectId(), controller.notification.delete);
 
   // 议事模块 - 议题
   router.get('/api/topics', controller.topic.list);
@@ -92,10 +92,10 @@ module.exports = app => {
 
   // 投票模块
   router.get('/api/votes', controller.vote.list);
-  router.get('/api/votes/:id', validateObjectId());
+  router.get('/api/votes/:id', validateObjectId(), controller.vote.detail);
   router.post('/api/votes', controller.vote.create);
-  router.post('/api/votes/:id/cast', validateObjectId());
-  router.post('/api/votes/:id/close', validateObjectId());
+  router.post('/api/votes/:id/cast', validateObjectId(), controller.vote.castVote);
+  router.post('/api/votes/:id/close', validateObjectId(), controller.vote.close);
 
   // 物业评价（具体路径在前，参数路径在后）
   router.get('/api/property-ratings/stats', controller.ratingResult.stats);
@@ -106,8 +106,8 @@ module.exports = app => {
   // 物业评价配置（管理员）
   router.get('/api/rating-categories', controller.ratingCategory.list);
   router.post('/api/rating-categories', controller.ratingCategory.create);
-  router.put('/api/rating-categories/:id', validateObjectId());
-  router.delete('/api/rating-categories/:id', validateObjectId());
+  router.put('/api/rating-categories/:id', validateObjectId(), controller.ratingCategory.update);
+  router.delete('/api/rating-categories/:id', validateObjectId(), controller.ratingCategory.delete);
 
   // 工具共享模块
   router.get('/api/tools', controller.tool.list);

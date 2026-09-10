@@ -110,7 +110,8 @@ class BorrowService extends Service {
   async return(recordId) {
     const record = await this.ctx.model.BorrowRecord.findById(recordId);
     if (!record) {
-      throw new Error('借阅记录不存在');
+      const { NotFoundError } = require('../core/exceptions');
+      throw new NotFoundError('借阅记录不存在');
     }
     if (record.status !== 'borrowed') {
       throw new Error('该图书已归还');
@@ -244,7 +245,8 @@ class BorrowService extends Service {
       { new: true }
     );
     if (!reservation) {
-      throw new Error('预约记录不存在');
+      const { NotFoundError } = require('../core/exceptions');
+      throw new NotFoundError('预约记录不存在');
     }
     return reservation;
   }

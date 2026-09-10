@@ -19,14 +19,19 @@ class VoteController extends BaseController {
 
   // 投票详情
   async detail() {
-    const { ctx } = this;
-    const { id } = ctx.params;
-    const userId = ctx.state.user?.id || null;
     try {
-      const result = await ctx.service.vote.getDetail(id, userId);
+      const id = this.ctx.params.id;
+      const userId = this.ctx.state.user?.id || null;
+      const result = await this.ctx.service.vote.getDetail(id, userId);
+      if (!result) throw new Error('NOT_FOUND');
       this.success(result);
-    } catch (e) {
-      this.fail(e.message);
+    } catch (err) {
+      if (err.message === 'NOT_FOUND') {
+        this.ctx.status = 404;
+        this.fail('投票不存在', 404, 404);
+      } else {
+        this.fail(err.message || '获取投票详情失败');
+      }
     }
   }
 
@@ -84,16 +89,16 @@ class VoteController extends BaseController {
         return this.fail('投票已结束');
       }
 
-      const existingVote = await ctx.model.VoteRecord.findOne({ voteId: id, userId });
+      const existingVote = await ctx.model.VoteRecord.findOne({ vote_id: id, user_id: userId });
       if (existingVote) {
         return this.fail('您已投过票', -1, 400);
       }
 
       await ctx.model.VoteRecord.create({
-        voteId: id,
-        userId,
-        selectedItemIds: selected_item_ids,
-        voteTime: new Date(),
+        vote_id: id,
+        user_id: userId,
+        selected_item_ids: selected_item_ids.join(','),
+        voted_at: new Date(),
       });
 
       // 更新各选项的投票计数

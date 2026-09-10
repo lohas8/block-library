@@ -94,7 +94,7 @@ class RatingResultService extends Service {
   async hasSubmitted(communityId, userId, year) {
     const y = year || new Date().getFullYear();
     const result = await this.ctx.model.RatingResult.findOne({
-      community_id, user_id: userId, year: y,
+      community_id: communityId, user_id: userId, year: y,
     });
     return !!result;
   }

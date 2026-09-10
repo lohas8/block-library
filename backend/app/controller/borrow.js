@@ -26,7 +26,8 @@ class BorrowController extends BaseController {
       const record = await ctx.service.borrow.return(id);
       this.success(record, '归还成功');
     } catch (e) {
-      this.fail(e.message, -1, 400);
+      const status = e.status || (e.name === 'NotFoundError' ? 404 : 400);
+      this.fail(e.message, e.code || status, status);
     }
   }
 
@@ -73,7 +74,8 @@ class BorrowController extends BaseController {
       const reservation = await ctx.service.borrow.cancelReserve(id);
       this.success(reservation, '取消预约成功');
     } catch (e) {
-      this.fail(e.message, -1, 400);
+      const status = e.status || (e.name === 'NotFoundError' ? 404 : 400);
+      this.fail(e.message, e.code || status, status);
     }
   }
 

@@ -32,7 +32,7 @@ class VoteService extends Service {
    */
   async getDetail(id, userId) {
     const vote = await this.ctx.model.Vote.findById(id);
-    if (!vote) throw new Error('投票不存在');
+    if (!vote) throw new Error('NOT_FOUND');
 
     const items = await this.ctx.model.VoteItem.find({ vote_id: id }).sort({ order: 1 });
     const voteObj = vote.toObject();
