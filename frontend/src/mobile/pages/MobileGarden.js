@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import './MobileGarden.css';
 
 const LEVEL_CONFIG = {
@@ -67,41 +67,27 @@ const MobileGarden = () => {
   const [expandedBuilding, setExpandedBuilding] = useState(null);
   const [buildings, setBuildings] = useState([]);
   const [community, setCommunity] = useState(null);
-  const [mountLog, setMountLog] = useState([]);
-  const logRef = useRef(0);
 
   useEffect(() => {
-    const id = ++logRef.current;
-    setMountLog(prev => [...prev, `useEffect run #${id}`]);
-    console.log(`[MobileGarden] useEffect #${id} - component mounted`);
     setBuildings(MOCK_BUILDINGS);
     setCommunity(MOCK_COMMUNITY);
-    console.log('[MobileGarden] data set, buildings:', MOCK_BUILDINGS.length);
-    return () => console.log(`[MobileGarden] useEffect #${id} - cleanup`);
   }, []);
 
   const toggleBuilding = (id) => {
     setExpandedBuilding(prev => (prev === id ? null : id));
   };
 
-  console.log('[MobileGarden] render - view:', view, 'buildings:', buildings.length);
+  const getRankBadge = (rank) => {
+    if (rank === 1) return { emoji: '🥇', text: '' };
+    if (rank === 2) return { emoji: '🥈', text: '' };
+    if (rank === 3) return { emoji: '🥉', text: '' };
+    return { emoji: '', text: rank };
+  };
 
   return (
-    <>
-      {/* 🔵 DEBUG: 这是 MobileGarden 的入口标记，如果看不到说明组件没渲染 */}
-      <div style={{
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-        color: '#fff', padding: '16px 20px', borderRadius: '12px',
-        margin: '16px', textAlign: 'center', fontSize: '16px', fontWeight: 'bold',
-        boxShadow: '0 4px 15px rgba(102, 126, 234, 0.4)'
-      }}>
-        🎉 MobileGarden 正在渲染！buildings 数量: {buildings.length} | view: {view}
-      </div>
-
-      <div className="garden-page" data-debug="garden-page-root">
-      <div className="garden-title" data-testid="garden-title">🏠 家园</div>
+    <div className="garden-page" data-debug="garden-page-root">
+      <div className="garden-title">🏠 家园</div>
       <div className="garden-slogan">共建美好社区，共享品质生活</div>
-      <div className="garden-debug">buildings: {buildings.length} | community: {community ? 'yes' : 'no'}</div>
 
       <div className="garden-tabs">
         <div className={`tab ${view === 'building' ? 'active' : ''}`} onClick={() => setView('building')}>按楼栋</div>
@@ -118,27 +104,33 @@ const MobileGarden = () => {
             <div className={`expand-icon ${expandedBuilding === building.building_id ? 'open' : ''}`}>›</div>
           </div>
           <div className="top-residents">
-            {building.residents.slice(0, 3).map(r => (
-              <div key={r.rank} className="resident-row top" data-name={r.name}>
-                <span className={`rank-badge rank-${r.rank <= 3 ? r.rank : ''}`}>{r.rank <= 3 ? '' : r.rank}{r.rank === 1 ? '🥇' : r.rank === 2 ? '🥈' : r.rank === 3 ? '🥉' : ''}</span>
-                <span className="avatar">{r.avatar}</span>
-                <span className="name">{r.name}</span>
-                <Stars level={r.level} />
-                <span className="score">+{r.score}分</span>
-              </div>
-            ))}
-          </div>
-          {expandedBuilding === building.building_id && (
-            <div className="all-residents">
-              {building.residents.slice(3).map(r => (
-                <div key={r.rank} className="resident-row" data-name={r.name}>
-                  <span className="rank-badge">{r.rank}</span>
+            {building.residents.slice(0, 3).map(r => {
+              const badge = getRankBadge(r.rank);
+              return (
+                <div key={r.rank} className="resident-row top" data-name={r.name}>
+                  <span className={`rank-badge rank-${r.rank <= 3 ? r.rank : ''}`}>{badge.emoji}{badge.text}</span>
                   <span className="avatar">{r.avatar}</span>
                   <span className="name">{r.name}</span>
                   <Stars level={r.level} />
                   <span className="score">+{r.score}分</span>
                 </div>
-              ))}
+              );
+            })}
+          </div>
+          {expandedBuilding === building.building_id && (
+            <div className="all-residents">
+              {building.residents.slice(3).map(r => {
+                const badge = getRankBadge(r.rank);
+                return (
+                  <div key={r.rank} className="resident-row" data-name={r.name}>
+                    <span className="rank-badge">{badge.text || badge.emoji}</span>
+                    <span className="avatar">{r.avatar}</span>
+                    <span className="name">{r.name}</span>
+                    <Stars level={r.level} />
+                    <span className="score">+{r.score}分</span>
+                  </div>
+                );
+              })}
             </div>
           )}
         </div>
@@ -151,20 +143,23 @@ const MobileGarden = () => {
             <div className="community-total">🏆 社区总贡献积分 <span className="total-num">{community.total_score}</span></div>
           </div>
           <div className="rank-list">
-            {community.topResidents.map(r => (
-              <div key={r.rank} className="resident-row">
-                <span className={`rank-badge rank-${r.rank <= 3 ? r.rank : ''}`}>{r.rank <= 3 ? '' : r.rank}{r.rank === 1 ? '🥇' : r.rank === 2 ? '🥈' : r.rank === 3 ? '🥉' : ''}</span>
-                <span className="avatar">{r.avatar}</span>
-                <div className="resident-info">
-                  <span className="name">{r.name}</span>
-                  <span className="building-tag">{r.building}</span>
+            {community.topResidents.map(r => {
+              const badge = getRankBadge(r.rank);
+              return (
+                <div key={r.rank} className="resident-row">
+                  <span className={`rank-badge rank-${r.rank <= 3 ? r.rank : ''}`}>{badge.emoji}{badge.text}</span>
+                  <span className="avatar">{r.avatar}</span>
+                  <div className="resident-info">
+                    <span className="name">{r.name}</span>
+                    <span className="building-tag">{r.building}</span>
+                  </div>
+                  <div className="resident-score">
+                    <Stars level={r.level} />
+                    <span className="score">+{r.score}分</span>
+                  </div>
                 </div>
-                <div className="resident-score">
-                  <Stars level={r.level} />
-                  <span className="score">+{r.score}分</span>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       )}

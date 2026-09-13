@@ -1,8 +1,12 @@
-/* MobilePublish.css */
+/**
+ * MobilePublish.css - 内容发布页面样式
+ * 社区温暖风设计（与MobileHome一致）
+ * 主色 #2DCCB6 薄荷青 | 深辅 #1A7F6F | 浅辅 #D6F5EE | 暖强调 #F4A261 | 背景 #FAFDFC | 文字 #1B3A35
+ */
 
 .mobile-publish {
   min-height: 100vh;
-  background: #f5f5f5;
+  background: #FAFDFC;
   display: flex;
   flex-direction: column;
 }
@@ -11,9 +15,8 @@
 .publish-header {
   display: flex;
   align-items: center;
-  padding: 12px 16px;
-  background: #fff;
-  border-bottom: 1px solid #f0f0f0;
+  padding: 14px 16px;
+  background: #FAFDFC;
   position: sticky;
   top: 0;
   z-index: 10;
@@ -24,20 +27,20 @@
   font-weight: 300;
   cursor: pointer;
   padding-right: 12px;
-  color: #333;
+  color: #2DCCB6;
+  line-height: 1;
 }
 
 .header-title {
   font-size: 17px;
-  font-weight: 600;
-  color: #262626;
+  font-weight: 700;
+  color: #1B3A35;
 }
 
 /* Segmented */
 .publish-segmented {
-  background: #fff;
+  background: #FAFDFC;
   padding: 12px 16px;
-  border-bottom: 1px solid #f0f0f0;
 }
 
 /* Content */
@@ -58,15 +61,22 @@
   border-bottom: 1px solid #f0f0f0;
 }
 
+.form-item:first-child {
+  border-top: none;
+}
+
 .form-label {
   font-size: 14px;
-  color: #262626;
-  font-weight: 500;
+  color: #1B3A35;
+  font-weight: 600;
   margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .required {
-  color: #ff4d4f;
+  color: #F4A261;
 }
 
 .optional {
@@ -77,10 +87,12 @@
 
 .form-input {
   font-size: 15px;
+  color: #1B3A35;
 }
 
 .form-textarea {
   font-size: 15px;
+  color: #1B3A35;
 }
 
 .form-count {
@@ -99,8 +111,8 @@
 
 .price-unit {
   font-size: 16px;
-  color: #333;
-  font-weight: 500;
+  color: #2DCCB6;
+  font-weight: 700;
 }
 
 .price-input {
@@ -112,8 +124,9 @@
   width: 100%;
   text-align: left;
   justify-content: flex-start;
-  --background-color: #f5f5f5;
-  --border-color: #f0f0f0;
+  --background-color: #FAFDFC;
+  --border-color: #D6F5EE;
+  --text-color: #1B3A35;
 }
 
 /* Condition radio */
@@ -129,7 +142,8 @@
 
 /* Trade mode list */
 .trade-mode-list {
-  --background-color: #f5f5f5;
+  --background-color: #FAFDFC;
+  --border-color: #D6F5EE;
 }
 
 /* ==================== Image Upload ==================== */
@@ -146,10 +160,10 @@
 .image-thumb {
   position: relative;
   aspect-ratio: 1;
-  border-radius: 6px;
+  border-radius: 8px;
   overflow: hidden;
   cursor: grab;
-  background: #f0f0f0;
+  background: #FAFDFC;
 }
 
 .image-thumb:active {
@@ -180,7 +194,7 @@
   width: 24px;
   height: 24px;
   border: 3px solid rgba(255, 255, 255, 0.3);
-  border-top-color: #fff;
+  border-top-color: #2DCCB6;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
@@ -191,8 +205,8 @@
 
 .delete-btn {
   position: absolute;
-  top: 2px;
-  right: 2px;
+  top: 4px;
+  right: 4px;
   width: 18px;
   height: 18px;
   background: rgba(0, 0, 0, 0.55);
@@ -218,25 +232,25 @@
 
 .add-image-btn {
   aspect-ratio: 1;
-  border-radius: 6px;
-  background: #f0f0f0;
-  border: 1px dashed #d9d9d9;
+  border-radius: 8px;
+  background: #FAFDFC;
+  border: 1.5px dashed #D6F5EE;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: border-color 0.2s;
+  transition: all 0.2s;
 }
 
 .add-image-btn:active {
-  border-color: #1677ff;
-  background: #e6f4ff;
+  border-color: #2DCCB6;
+  background: #D6F5EE;
 }
 
 .add-icon {
   font-size: 24px;
-  color: #999;
+  color: #2DCCB6;
   line-height: 1;
 }
 
@@ -260,6 +274,8 @@
 }
 
 .publish-footer .adm-button {
-  border-radius: 8px;
+  border-radius: 20px;
   font-size: 16px;
+  --background-color: #2DCCB6;
+  --border-color: #2DCCB6;
 }

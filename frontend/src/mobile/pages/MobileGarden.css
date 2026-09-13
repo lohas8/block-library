@@ -1,34 +1,40 @@
-/* MobileGarden.css */
+/**
+ * MobileGarden.css - 家园页面样式
+ * 社区温暖风设计（与MobileHome一致）
+ * 主色 #2DCCB6 薄荷青 | 深辅 #1A7F6F | 浅辅 #D6F5EE | 暖强调 #F4A261 | 背景 #FAFDFC | 文字 #1B3A35
+ */
 
 .garden-page {
-  background: #f5f5f5;
+  background: #FAFDFC;
   min-height: 100vh;
   padding-bottom: 20px;
 }
 
 /* ===== Header ===== */
-.garden-header {
-  background: #2E7D32;
-  color: #fff;
-  padding: 18px 16px 14px;
-}
-
 .garden-title {
-  font-size: 22px;
-  font-weight: 700;
-  margin-bottom: 4px;
+  font-size: 20px;
+  font-weight: 800;
+  color: #2DCCB6;
+  letter-spacing: 1px;
+  text-align: left;
+  padding: 14px 16px 2px;
 }
 
 .garden-slogan {
-  font-size: 12px;
-  opacity: 0.85;
+  font-size: 11px;
+  color: #999;
+  padding: 0 16px 12px;
+  text-align: left;
 }
 
 /* ===== Tab ===== */
 .garden-tabs {
   display: flex;
   background: #fff;
-  border-bottom: 1px solid #eee;
+  margin: 0 16px 14px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
   position: sticky;
   top: 0;
   z-index: 10;
@@ -43,32 +49,33 @@
   cursor: pointer;
   border-bottom: 2px solid transparent;
   transition: all 0.2s;
+  font-weight: 500;
 }
 
 .garden-tabs .tab.active {
-  color: #2e7d32;
-  font-weight: 600;
-  border-bottom-color: #2e7d32;
+  color: #fff;
+  background: #2DCCB6;
+  font-weight: 700;
 }
 
 /* ===== 楼栋列表 ===== */
 .building-list {
-  padding: 12px;
+  padding: 0 16px;
 }
 
 .building-card {
   background: #fff;
   border-radius: 12px;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   overflow: hidden;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
 }
 
 .building-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 16px;
+  padding: 14px 16px;
   background: #fff;
   cursor: pointer;
   border-bottom: 1px solid #f0f0f0;
@@ -82,26 +89,28 @@
 
 .building-name {
   font-size: 15px;
-  font-weight: 600;
-  color: #333;
+  font-weight: 700;
+  color: #1B3A35;
 }
 
 .building-total {
   font-size: 12px;
-  color: #2e7d32;
-  background: #e8f5e9;
-  padding: 2px 8px;
+  color: #1A7F6F;
+  background: #D6F5EE;
+  padding: 2px 10px;
   border-radius: 10px;
+  font-weight: 600;
 }
 
 .building-header:hover {
-  background: #fafafa;
+  background: #FAFDFC;
 }
 
 .expand-icon {
   font-size: 18px;
-  color: #999;
+  color: #2DCCB6;
   transition: transform 0.2s;
+  font-weight: 700;
 }
 
 .expand-icon.open {
@@ -110,19 +119,19 @@
 
 /* ===== 贡献者列表 ===== */
 .top-residents {
-  padding: 6px 14px 10px;
+  padding: 8px 14px 12px;
 }
 
 .all-residents {
-  padding: 0 14px 10px;
+  padding: 0 14px 12px;
   border-top: 1px dashed #f0f0f0;
 }
 
 .resident-row {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 7px 0;
+  gap: 10px;
+  padding: 8px 0;
   border-bottom: 1px solid #fafafa;
 }
 
@@ -131,21 +140,21 @@
 }
 
 .resident-row.top {
-  padding: 8px 0;
+  padding: 10px 0;
 }
 
 .rank-badge {
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
-  background: #e0e0e0;
-  color: #666;
+  background: #D6F5EE;
+  color: #1A7F6F;
   font-size: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .rank-badge.rank-1 { background: #FFD700; color: #7a5f00; }
@@ -153,18 +162,19 @@
 .rank-badge.rank-3 { background: #CD7F32; color: #fff; }
 
 .avatar {
-  font-size: 20px;
+  font-size: 22px;
   flex-shrink: 0;
 }
 
 .name {
   flex: 1;
   font-size: 14px;
-  color: #1A1A1A;
+  color: #1B3A35;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  font-weight: 500;
 }
 
 .stars {
@@ -175,19 +185,19 @@
 
 .score {
   font-size: 13px;
-  color: #2e7d32;
-  font-weight: 600;
+  color: #2DCCB6;
+  font-weight: 700;
   min-width: 52px;
   text-align: right;
 }
 
 /* ===== 小区视角 ===== */
 .community-view {
-  padding: 12px;
+  padding: 0 16px;
 }
 
 .community-banner {
-  background: #1b5e20;
+  background: linear-gradient(135deg, #2DCCB6 0%, #1A7F6F 100%);
   border-radius: 12px;
   padding: 20px;
   color: #fff;
@@ -209,14 +219,14 @@
 .total-num {
   font-size: 24px;
   font-weight: 700;
-  color: #ffd700;
+  color: #FFD700;
 }
 
 .rank-list {
   background: #fff;
-  border-radius: 10px;
+  border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
 }
 
 .rank-list .resident-row {
@@ -235,8 +245,8 @@
   width: 22px;
   height: 22px;
   border-radius: 50%;
-  background: #e0e0e0;
-  color: #666;
+  background: #D6F5EE;
+  color: #1A7F6F;
   font-size: 10px;
   display: flex;
   align-items: center;
@@ -263,14 +273,17 @@
 
 .resident-info .name {
   font-size: 14px;
-  font-weight: 600;
-  color: #333;
+  font-weight: 700;
+  color: #1B3A35;
   margin-bottom: 2px;
 }
 
 .building-tag {
   font-size: 11px;
   color: #999;
+  background: #f5f5f5;
+  padding: 1px 6px;
+  border-radius: 4px;
 }
 
 .resident-score {
@@ -286,6 +299,6 @@
 
 .resident-score .score {
   font-size: 13px;
-  color: #2e7d32;
-  font-weight: 600;
+  color: #2DCCB6;
+  font-weight: 700;
 }

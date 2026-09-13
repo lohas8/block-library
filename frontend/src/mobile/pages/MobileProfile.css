@@ -1,9 +1,13 @@
-/* MobileProfile - 个人中心页面样式 */
+/**
+ * MobileProfile - 个人中心页面样式
+ * 社区温暖风设计（与MobileHome一致）
+ * 主色 #2DCCB6 薄荷青 | 深辅 #1A7F6F | 浅辅 #D6F5EE | 暖强调 #F4A261 | 背景 #FAFDFC | 文字 #1B3A35
+ */
 
 .mobile-profile {
-  background-color: #F5F5F5;
+  background-color: #FAFDFC;
   min-height: 100vh;
-  padding: 12px 16px 80px; /* 底部预留 TabBar 空间 */
+  padding: 14px 16px 80px;
 }
 
 /* 顶部用户信息卡片 */
@@ -12,6 +16,7 @@
   border-radius: 12px;
   padding: 16px;
   margin-bottom: 12px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
 }
 
 .profile-user-top {
@@ -29,7 +34,7 @@
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #2DCCB6 0%, #1A7F6F 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -57,19 +62,20 @@
 
 .profile-nickname {
   font-size: 18px;
-  font-weight: 600;
-  color: #1a1a1a;
+  font-weight: 700;
+  color: #1B3A35;
   margin-bottom: 4px;
 }
 
 .profile-verified-tag {
   display: inline-block;
-  background: #f0f0f0;
-  color: #666;
+  background: #D6F5EE;
+  color: #1A7F6F;
   font-size: 12px;
   padding: 2px 8px;
   border-radius: 12px;
   margin-bottom: 8px;
+  font-weight: 500;
 }
 
 .profile-wallet {
@@ -95,7 +101,7 @@
 }
 
 .profile-copy-icon:active {
-  color: #1890ff;
+  color: #2DCCB6;
 }
 
 /* 积分/贡献值区域 */
@@ -119,15 +125,15 @@
 
 .profile-stat-value {
   font-size: 20px;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .profile-stat-value.points {
-  color: #1890ff;
+  color: #2DCCB6;
 }
 
 .profile-stat-value.contribution {
-  color: #52c41a;
+  color: #F4A261;
 }
 
 /* 功能菜单 */
@@ -136,6 +142,7 @@
   border-radius: 12px;
   padding: 8px 0;
   margin-bottom: 12px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
 }
 
 .profile-menu-grid {
@@ -157,7 +164,7 @@
 }
 
 .profile-menu-item:active {
-  background: #f5f5f5;
+  background: #FAFDFC;
 }
 
 .profile-menu-icon {
@@ -167,8 +174,9 @@
 
 .profile-menu-title {
   font-size: 12px;
-  color: #333;
+  color: #1B3A35;
   text-align: center;
+  font-weight: 500;
 }
 
 .profile-menu-badge {
@@ -177,7 +185,7 @@
   right: 12px;
   min-width: 16px;
   height: 16px;
-  background: #ff4d4f;
+  background: #F4A261;
   color: white;
   font-size: 10px;
   border-radius: 8px;
@@ -193,6 +201,7 @@
   border-radius: 12px;
   padding: 16px;
   margin-bottom: 12px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
 }
 
 .profile-events-header {
@@ -200,24 +209,45 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f0f0f0;
 }
 
+/* 左边竖线 */
 .profile-events-title {
-  font-size: 16px;
-  font-weight: 600;
-  color: #1a1a1a;
+  font-size: 15px;
+  font-weight: 700;
+  color: #2DCCB6;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.profile-events-title::before {
+  content: '';
+  display: inline-block;
+  width: 3px;
+  height: 16px;
+  background: #2DCCB6;
+  border-radius: 2px;
+  flex-shrink: 0;
 }
 
 .profile-events-more {
-  font-size: 14px;
-  color: #999;
-  display: flex;
-  align-items: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: #2DCCB6;
+  padding: 4px 14px;
+  border: 1.5px solid #2DCCB6;
+  border-radius: 16px;
+  background: #fff;
   cursor: pointer;
+  transition: all 0.2s;
 }
 
 .profile-events-more:active {
-  color: #1890ff;
+  background: #2DCCB6;
+  color: #fff;
 }
 
 .profile-events-timeline {
@@ -242,7 +272,7 @@
   top: 8px;
   bottom: 0;
   width: 1px;
-  background: #e8e8e8;
+  background: #D6F5EE;
 }
 
 .profile-event-item:last-child::before {
@@ -256,12 +286,12 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: #d9d9d9;
-  border: 2px solid white;
+  background: #D6F5EE;
+  border: 2px solid #fff;
 }
 
 .profile-event-item:active .profile-event-dot {
-  background: #1890ff;
+  background: #2DCCB6;
 }
 
 .profile-event-content {
@@ -272,9 +302,10 @@
 
 .profile-event-title {
   font-size: 14px;
-  color: #333;
+  color: #1B3A35;
   flex: 1;
   margin-right: 8px;
+  font-weight: 600;
 }
 
 .profile-event-meta {
@@ -291,8 +322,8 @@
 
 .profile-event-status {
   font-size: 12px;
-  color: #999;
-  background: #f5f5f5;
+  color: #1A7F6F;
+  background: #D6F5EE;
   padding: 2px 8px;
   border-radius: 4px;
 }
@@ -325,11 +356,11 @@
 }
 
 .profile-tabbar-item:active {
-  background: #f5f5f5;
+  background: #FAFDFC;
 }
 
 .profile-tabbar-item.active {
-  color: #1890ff;
+  color: #2DCCB6;
 }
 
 .profile-tabbar-icon {
@@ -343,7 +374,7 @@
 
 /* Toast 样式覆盖 */
 .apidoc-toast {
-  --adm-color-primary: #1890ff;
+  --adm-color-primary: #2DCCB6;
 }
 
 /* 响应式调整 */
