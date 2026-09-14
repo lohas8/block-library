@@ -241,10 +241,11 @@ const MobileHome = () => {
       </div>
 
       {/* ===== 物业评价 ===== */}
-      <div className="section-title">
-        <span>物业评价</span>
-      </div>
       <div className="rate-card">
+        <div className="rate-card-header">
+          <span className="rate-card-title">物业评价</span>
+          <span className="rate-btn" onClick={() => navigate('/mobile/rate')}>去评价 ›</span>
+        </div>
         <div className="rate-inner">
           {rateStats.map((item, i) => (
             <div key={i} className="rate-item">
@@ -253,9 +254,6 @@ const MobileHome = () => {
               <div className="rate-label">{item.label}</div>
             </div>
           ))}
-        </div>
-        <div className="rate-footer">
-          <span className="rate-btn" onClick={() => navigate('/mobile/rate')}>去评价 ›</span>
         </div>
       </div>
 

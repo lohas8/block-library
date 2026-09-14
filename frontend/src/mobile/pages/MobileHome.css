@@ -155,9 +155,49 @@
   padding: 0 16px 14px;
   background: #FAFDFC;
 }
-.rate-inner {
+.rate-card-header {
   background: #fff;
   border-radius: 12px 12px 0 0;
+  padding: 14px 16px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.rate-card-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #2DCCB6;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.rate-card-title::before {
+  content: '';
+  display: inline-block;
+  width: 3px;
+  height: 16px;
+  background: #2DCCB6;
+  border-radius: 2px;
+}
+.rate-btn {
+  font-size: 13px;
+  font-weight: 600;
+  color: #2DCCB6;
+  padding: 6px 20px;
+  border: 1.5px solid #2DCCB6;
+  border-radius: 16px;
+  background: #fff;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.rate-btn:active {
+  background: #2DCCB6;
+  color: #fff;
+}
+.rate-inner {
+  background: #fff;
+  border-radius: 0 0 12px 12px;
   overflow: hidden;
   display: flex;
   box-shadow: 0 1px 4px rgba(0,0,0,0.06);
@@ -185,29 +225,6 @@
   font-size: 11px;
   color: #999;
   margin-top: 4px;
-}
-.rate-footer {
-  background: #fff;
-  border-radius: 0 0 12px 12px;
-  padding: 10px 16px;
-  text-align: center;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-}
-.rate-btn {
-  font-size: 13px;
-  font-weight: 600;
-  color: #2DCCB6;
-  padding: 6px 20px;
-  border: 1.5px solid #2DCCB6;
-  border-radius: 16px;
-  background: #fff;
-  cursor: pointer;
-  transition: all 0.2s;
-  display: inline-block;
-}
-.rate-btn:active {
-  background: #2DCCB6;
-  color: #fff;
 }
 
 /* ===== Slide Cards（焦点议题）- 100%宽度单卡片 ===== */
