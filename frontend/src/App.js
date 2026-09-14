@@ -26,6 +26,7 @@ import MobileTopicsList from './mobile/pages/MobileTopicsList';
 import MobileTopicDetail from './mobile/pages/MobileTopicDetail';
 import MobileTopicCreate from './mobile/pages/MobileTopicCreate';
 import MobileVoteDetail from './mobile/pages/MobileVoteDetail';
+import MobileGarden from './mobile/pages/MobileGarden';
 import MobileBookList from './mobile/pages/MobileBookList';
 import MobileMyBorrows from './mobile/pages/MobileMyBorrows';
 import MobileProfile from './mobile/pages/MobileProfile';
@@ -113,12 +114,12 @@ function App() {
             <Route index element={<MobileHome />} />
             <Route path="topics" element={<MobileTopicsList />} />
             <Route path="topics/create" element={<MobileTopicCreate />} />
-            <Route path="topics/:id" element={<MobileTopicDetail />} />
-            <Route path="votes/:id" element={<MobileVoteDetail />} />
-            <Route path="garden" element={<MobileProfile />} />
-            <Route path="ai" element={<MobileProfile />} />
+            <Route path="garden" element={<MobileGarden />} />
             <Route path="square" element={<MobileSquare />} />
             <Route path="publish" element={<MobilePublish />} />
+            <Route path="topics/:id" element={<MobileTopicDetail />} />
+            <Route path="votes/:id" element={<MobileVoteDetail />} />
+            <Route path="ai" element={<MobileProfile />} />
             <Route path="profile" element={<MobileProfile />} />
             <Route path="books" element={<MobileBookList />} />
             <Route path="my-borrows" element={<MobileMyBorrows />} />

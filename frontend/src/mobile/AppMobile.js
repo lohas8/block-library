@@ -35,13 +35,13 @@ const YishiRoutes = () => (
     <Routes>
       <Route index element={<MobileHome />} />
       <Route path="topics" element={<MobileTopicsList />} />
-      <Route path="topics/:id" element={<MobileTopicDetail />} />
       <Route path="topics/create" element={<MobileTopicCreate />} />
-      <Route path="votes/:id" element={<MobileVoteDetail />} />
       <Route path="garden" element={<MobileGarden />} />
-      <Route path="ai" element={<MobileProfile />} />
       <Route path="square" element={<MobileSquare />} />
       <Route path="publish" element={<MobilePublish />} />
+      <Route path="topics/:id" element={<MobileTopicDetail />} />
+      <Route path="votes/:id" element={<MobileVoteDetail />} />
+      <Route path="ai" element={<MobileProfile />} />
     </Routes>
   </AppLayoutMobileYishi>
 );

@@ -1,7 +1,8 @@
 /**
- * MobileHome - 社区温暖风设计（简化版 v2）
+ * MobileHome - 社区温暖风设计（简化版 v3）
  * 主色 #2DCCB6 薄荷青 | 深辅 #1A7F6F | 浅辅 #D6F5EE | 暖强调 #F4A261 | 背景 #FAFDFC | 文字 #1B3A35
  * 原则：页面背景FAFDFC，卡片背景纯白，标题主色，标题左竖线，100%宽度卡片
+ * 更新：搜索框去边框双层背景，物业评价按钮入卡片，焦点议题100%宽度，假数据兜底
  */
 
 /* ===== Layout Base ===== */
@@ -40,26 +41,35 @@
 
 /* ===== Search ===== */
 .yishi-search {
-  padding: 0 0 12px;
+  padding: 0 16px 12px;
   background: #FAFDFC;
 }
 .yishi-search .adm-search-bar {
-  background: #fff;
-  border-radius: 20px;
-  padding: 8px 14px;
-  border: 1.5px solid #eee;
-  margin: 0 16px;
-  width: calc(100% - 32px);
+  background: transparent;
+  padding: 0;
+  border: none;
+  --background-color: transparent;
 }
-.yishi-search .adm-search-bar:focus-within {
-  border-color: #2DCCB6;
+.yishi-search .adm-search-bar-input-wrapper {
+  background: transparent;
+  border: none;
+  border-bottom: 1.5px solid #e0e0e0;
+  border-radius: 0;
+  padding: 6px 8px 6px 0;
+}
+.yishi-search .adm-search-bar-input-wrapper:focus-within {
+  border-bottom-color: #2DCCB6;
 }
 .yishi-search .adm-input {
   font-size: 13px;
   color: #1B3A35;
+  background: transparent;
 }
 .yishi-search .adm-search-bar-search-icon {
   color: #999;
+}
+.yishi-search .adm-search-bar-clear-icon {
+  color: #ccc;
 }
 
 /* ===== Section Title ===== */
@@ -142,13 +152,12 @@
 
 /* ===== Rate Card（物业评价） ===== */
 .rate-card {
-  padding: 0 0 14px;
+  padding: 0 16px 14px;
   background: #FAFDFC;
 }
 .rate-inner {
   background: #fff;
-  margin: 0 16px;
-  border-radius: 12px;
+  border-radius: 12px 12px 0 0;
   overflow: hidden;
   display: flex;
   box-shadow: 0 1px 4px rgba(0,0,0,0.06);
@@ -177,20 +186,37 @@
   color: #999;
   margin-top: 4px;
 }
+.rate-footer {
+  background: #fff;
+  border-radius: 0 0 12px 12px;
+  padding: 10px 16px;
+  text-align: center;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.rate-btn {
+  font-size: 13px;
+  font-weight: 600;
+  color: #2DCCB6;
+  padding: 6px 20px;
+  border: 1.5px solid #2DCCB6;
+  border-radius: 16px;
+  background: #fff;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-block;
+}
+.rate-btn:active {
+  background: #2DCCB6;
+  color: #fff;
+}
 
-/* ===== Slide Cards（焦点议题） ===== */
+/* ===== Slide Cards（焦点议题）- 100%宽度单卡片 ===== */
 .slides-container {
-  display: flex;
-  gap: 12px;
-  overflow-x: auto;
   padding: 0 16px 14px;
   background: #FAFDFC;
-  scrollbar-width: none;
 }
-.slides-container::-webkit-scrollbar { display: none; }
 .slide-card {
-  width: 210px;
-  flex-shrink: 0;
+  width: 100%;
   background: #fff;
   border-radius: 12px;
   overflow: hidden;
@@ -199,20 +225,7 @@
   transition: all 0.25s ease;
 }
 .slide-card:active {
-  transform: scale(0.97);
-}
-.slide-card-empty {
-  width: 210px;
-  flex-shrink: 0;
-  background: #fff;
-  border-radius: 12px;
-  height: 110px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 13px;
-  color: #999;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  transform: scale(0.98);
 }
 .slide-header {
   background: #2DCCB6;
