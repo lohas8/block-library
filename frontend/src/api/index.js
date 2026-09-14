@@ -144,18 +144,26 @@ export const voteApi = {
   close: (id) => apiInstance.post(`/api/votes/${id}/close`),
 };
 
-// 物业评价 API
+// 物业评价 API（用户端）
+export const ratingApi = {
+  categories: (params) => apiInstance.get('/api/rating-categories', { params }),
+  submit: (data) => apiInstance.post('/api/property-ratings', data),
+  check: (params) => apiInstance.get('/api/property-ratings/check', { params }),
+  stats: (params) => apiInstance.get('/api/property-ratings/stats', { params }),
+};
+
+// 物业评价配置 API（管理端）
 export const propertyRatingApi = {
-  // 获取评价配置（管理员配置的大项+小项）
   categories: (params) => apiInstance.get('/api/rating-categories', { params }),
   createCategory: (data) => apiInstance.post('/api/rating-categories', data),
   updateCategory: (id, data) => apiInstance.put(`/api/rating-categories/${id}`, data),
   deleteCategory: (id) => apiInstance.delete(`/api/rating-categories/${id}`),
-  // 评分统计（卡片展示用）
+  addItem: (id, data) => apiInstance.post(`/api/rating-categories/${id}/items`, data),
+  updateItem: (id, itemKey, data) => apiInstance.put(`/api/rating-categories/${id}/items/${itemKey}`, data),
+  deleteItem: (id, itemKey) => apiInstance.delete(`/api/rating-categories/${id}/items/${itemKey}`),
+  seed: (data) => apiInstance.post('/api/rating-categories/seed', data),
   stats: (params) => apiInstance.get('/api/property-ratings/stats', { params }),
-  // 业主提交评价
   submit: (data) => apiInstance.post('/api/property-ratings', data),
-  // 检查是否已提交
   check: (params) => apiInstance.get('/api/property-ratings/check', { params }),
 };
 

@@ -11,6 +11,10 @@ module.exports = app => {
     community_id: { type: Schema.Types.ObjectId, ref: 'Community' },
     // 大项名称（如"服务态度"、"环境卫生"、"设施维护"）
     name: { type: String, required: true, maxLength: 30 },
+    // emoji图标
+    icon: { type: String, default: '📋' },
+    // 主题色
+    color: { type: String, default: '#2DCCB6' },
     // 排序
     order: { type: Number, default: 0 },
     // 启用/停用

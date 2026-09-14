@@ -1,0 +1,184 @@
+/**
+ * MobileRateRating - 物业评价详情页样式
+ */
+.rate-page {
+  background: #FAFDFC;
+  min-height: 100vh;
+  padding-bottom: 80px;
+}
+
+.loading-hint {
+  padding: 40px;
+  text-align: center;
+  color: #999;
+  font-size: 14px;
+}
+
+/* ===== Header ===== */
+.rate-header {
+  padding: 16px 16px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #FAFDFC;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.rate-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: #2DCCB6;
+}
+.rate-year {
+  font-size: 13px;
+  color: #999;
+  background: #fff;
+  padding: 4px 12px;
+  border-radius: 12px;
+  border: 1px solid #eee;
+}
+
+/* ===== Progress ===== */
+.rate-progress {
+  padding: 0 16px 14px;
+  background: #FAFDFC;
+}
+.progress-bar {
+  height: 6px;
+  background: #e0e0e0;
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+.progress-fill {
+  height: 100%;
+  background: #2DCCB6;
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+.progress-text {
+  font-size: 12px;
+  color: #999;
+  text-align: right;
+}
+
+/* ===== Categories ===== */
+.rate-categories {
+  padding: 0 16px;
+}
+.cat-card {
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 12px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.cat-header {
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-left: 4px solid #2DCCB6;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.cat-header:active {
+  background: #FAFDFC;
+}
+.cat-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.cat-icon {
+  font-size: 20px;
+}
+.cat-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1B3A35;
+}
+.cat-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.cat-rated {
+  font-size: 12px;
+  color: #999;
+}
+.cat-arrow {
+  font-size: 16px;
+  color: #ccc;
+  transition: transform 0.2s;
+  display: inline-block;
+}
+.cat-arrow.up {
+  transform: rotate(270deg);
+}
+
+/* ===== Items ===== */
+.cat-items {
+  padding: 4px 16px 16px;
+  border-top: 1px solid #f5f5f5;
+}
+.rate-item-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 11px 0;
+  border-bottom: 1px solid #f9f9f9;
+}
+.rate-item-row:last-child {
+  border-bottom: none;
+}
+.item-name {
+  font-size: 13px;
+  color: #444;
+  flex: 1;
+}
+.stars {
+  display: flex;
+  gap: 4px;
+}
+.star {
+  font-size: 22px;
+  cursor: pointer;
+  transition: transform 0.1s;
+  user-select: none;
+}
+.star:active {
+  transform: scale(1.2);
+}
+
+/* ===== Submit Bar ===== */
+.rate-submit-bar {
+  position: fixed;
+  bottom: 60px;
+  left: 0;
+  right: 0;
+  padding: 12px 16px;
+  background: rgba(250,253,252,0.95);
+  backdrop-filter: blur(8px);
+  z-index: 20;
+}
+.rate-submit-btn {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 12px;
+  background: #ccc;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: not-allowed;
+  transition: all 0.2s;
+}
+.rate-submit-btn.ready {
+  background: #2DCCB6;
+  cursor: pointer;
+}
+.rate-submit-btn.ready:active {
+  background: #1A7F6F;
+}

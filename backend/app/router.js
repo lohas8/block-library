@@ -108,6 +108,10 @@ module.exports = app => {
   router.post('/api/rating-categories', controller.ratingCategory.create);
   router.put('/api/rating-categories/:id', validateObjectId(), controller.ratingCategory.update);
   router.delete('/api/rating-categories/:id', validateObjectId(), controller.ratingCategory.delete);
+  router.post('/api/rating-categories/:id/items', validateObjectId(), controller.ratingCategory.addItem);
+  router.put('/api/rating-categories/:id/items/:itemKey', validateObjectId(), controller.ratingCategory.updateItem);
+  router.delete('/api/rating-categories/:id/items/:itemKey', validateObjectId(), controller.ratingCategory.removeItem);
+  router.post('/api/rating-categories/seed', controller.ratingCategory.seed);
 
   // 工具共享模块
   router.get('/api/tools', controller.tool.list);

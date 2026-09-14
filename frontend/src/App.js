@@ -35,6 +35,8 @@ import MobilePublish from './mobile/pages/MobilePublish';
 import MobileScanBorrow from './mobile/pages/MobileScanBorrow';
 import MobileToolShare from './mobile/pages/MobileToolShare';
 import MobileRuleApply from './mobile/pages/MobileRuleApply';
+import MobileRateRating from './mobile/pages/MobileRateRating';
+import RatingCategoryManage from './pages/RatingCategoryManage';
 
 // 路由守卫
 const PrivateRoute = ({ children }) => {
@@ -101,6 +103,11 @@ function App() {
               </AdminRoute>
             } />
             <Route path="apply-rule" element={<ApplyRule />} />
+            <Route path="rating-categories" element={
+              <AdminRoute>
+                <RatingCategoryManage />
+              </AdminRoute>
+            } />
             <Route path="topics" element={<TopicsList />} />
             <Route path="topics/create" element={<CreateTopic />} />
             <Route path="topics/:id" element={<TopicDetail />} />
