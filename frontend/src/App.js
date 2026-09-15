@@ -127,6 +127,7 @@ function App() {
             <Route path="topics/:id" element={<MobileTopicDetail />} />
             <Route path="votes/:id" element={<MobileVoteDetail />} />
             <Route path="ai" element={<MobileProfile />} />
+            <Route path="rate" element={<MobileRateRating />} />
             <Route path="profile" element={<MobileProfile />} />
             <Route path="books" element={<MobileBookList />} />
             <Route path="my-borrows" element={<MobileMyBorrows />} />
